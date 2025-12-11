@@ -1,20 +1,430 @@
-id: https://ce-rise-models.codeberg.page/template-data-model/
-name: template_data_model
+id: https://ce-rise-models.codeberg.page/dpp-access-and-governance/
+name: dpp_access_and_governance
+title: CE-RISE DPP Access and Governance Data Model
+description: >
+    Operational and access-related metadata that governs how DPP records are stored, exposed, shared,
+    and maintained across systems. Stage 1 focuses on Access Control mechanisms.
+license: CC BY-NC 4.0
+version: 0.0.1
+
 prefixes:
-  linkml: https://w3id.org/linkml/
+    linkml: https://w3id.org/linkml/
+    dpag: https://ce-rise-models.codeberg.page/dpp-access-and-governance/
+    odrl: http://www.w3.org/ns/odrl/2/
+    acl: http://www.w3.org/ns/auth/acl#
+    dcterms: http://purl.org/dc/terms/
+    foaf: http://xmlns.com/foaf/0.1/
+    schema: https://schema.org/
+    xacml: urn:oasis:names:tc:xacml:3.0:core:schema:wd-17#
+    oauth: https://www.w3.org/ns/auth/oauth#
+    cert: http://www.w3.org/ns/auth/cert#
+    vcard: http://www.w3.org/2006/vcard/ns#
+    sec: https://w3id.org/security#
+    prov: http://www.w3.org/ns/prov#
+    gdpr: https://w3id.org/dpv/dpv-gdpr#
+    dpv: https://w3id.org/dpv#
+    xsd: http://www.w3.org/2001/XMLSchema#
+    dcat: http://www.w3.org/ns/dcat#
+
 imports:
-  - linkml:types
+    - linkml:types
+
 default_range: string
+
 classes:
-  ExampleClass:
-    attributes:
-      example_attribute:
-        range: string
-        description: Example field
-slots:
-  label:
-    range: string
-    description: Human-readable label
-  sqlIdentifier:
-    range: string
-    description: Machine-friendly field name for databases
+    DPPAccessAndGovernance:
+        description: >
+            Root class for operational and access-related metadata governing DPP records.
+            Stage 1 implementation focuses on Access Control mechanisms.
+        class_uri: dpag:DPPAccessAndGovernance
+        attributes:
+            access_control:
+                description: Access control configuration defining who can access what data under what conditions
+                range: AccessControl
+                slot_uri: dpag:hasAccessControl
+                annotations:
+                    sql_identifier: dpag_access_control
+                    owl.filler: dpag:access_control
+
+    # Stage 1: Access Control Classes
+
+    AccessControl:
+        description: >
+            Comprehensive access control configuration including access levels, security settings,
+            and consent management for DPP data
+        class_uri: acl:AccessControl
+        attributes:
+            access_levels:
+                description: Multi-tier access model defining public, authenticated, and restricted access
+                range: AccessLevels
+                slot_uri: acl:accessTo
+                annotations:
+                    sql_identifier: dpag_access_levels
+                    owl.filler: acl:accessTo
+            security_settings:
+                description: Security configuration for data protection and transport
+                range: SecuritySettings
+                slot_uri: sec:SecuritySettings
+                annotations:
+                    sql_identifier: dpag_security_settings
+                    owl.filler: sec:SecuritySettings
+            consent_management:
+                description: GDPR-compliant consent handling configuration
+                range: ConsentManagement
+                slot_uri: dpv:hasConsent
+                annotations:
+                    sql_identifier: dpag_consent_management
+                    owl.filler: dpv:hasConsent
+
+    AccessLevels:
+        description: Three-tier access model for granular data access control
+        class_uri: odrl:Permission
+        attributes:
+            public_access:
+                description: Configuration for publicly accessible data
+                range: PublicAccess
+                slot_uri: acl:Read
+                annotations:
+                    sql_identifier: dpag_access_public
+                    owl.filler: acl:Read
+            authenticated_access:
+                description: Configuration for authenticated user access
+                range: AuthenticatedAccess
+                slot_uri: acl:AuthenticatedAgent
+                annotations:
+                    sql_identifier: dpag_access_authenticated
+                    owl.filler: acl:AuthenticatedAgent
+            restricted_access:
+                description: Configuration for role-based restricted access
+                range: RestrictedAccess
+                slot_uri: odrl:Prohibition
+                annotations:
+                    sql_identifier: dpag_access_restricted
+                    owl.filler: odrl:Prohibition
+
+    PublicAccess:
+        description: Configuration for data that can be accessed without authentication
+        class_uri: acl:Read
+        attributes:
+            public_fields:
+                description: List of field identifiers that are openly accessible
+                multivalued: true
+                range: string
+                slot_uri: dcat:accessURL
+                annotations:
+                    sql_identifier: dpag_access_public_fields
+                    owl.filler: dpag:public_fields
+            public_access_url:
+                description: URL endpoint for public data access
+                range: uri
+                slot_uri: dcat:accessURL
+                annotations:
+                    sql_identifier: dpag_access_public_url
+                    owl.filler: dcat:accessURL
+            public_data_license:
+                description: License governing public data usage
+                range: string
+                slot_uri: dcterms:license
+                annotations:
+                    sql_identifier: dpag_access_public_license
+                    owl.filler: dcterms:license
+
+    AuthenticatedAccess:
+        description: Configuration for data requiring authentication
+        class_uri: acl:AuthenticatedAgent
+        attributes:
+            authentication_method:
+                description: Method used for authentication (OAuth2, API key, certificate, etc.)
+                range: AuthenticationMethodEnum
+                slot_uri: oauth:authenticationMethod
+                annotations:
+                    sql_identifier: dpag_access_auth_method
+                    owl.filler: dpag:authentication_method
+            authenticated_fields:
+                description: List of field identifiers accessible after authentication
+                multivalued: true
+                range: string
+                slot_uri: acl:accessToClass
+                annotations:
+                    sql_identifier: dpag_access_auth_fields
+                    owl.filler: dpag:authenticated_fields
+            authentication_endpoint:
+                description: URL endpoint for authentication services
+                range: uri
+                slot_uri: oauth:authorizationEndpoint
+                annotations:
+                    sql_identifier: dpag_access_auth_endpoint
+                    owl.filler: oauth:authorizationEndpoint
+            token_lifetime:
+                description: Duration of authentication token validity in seconds
+                range: integer
+                slot_uri: sec:tokenLifetime
+                annotations:
+                    sql_identifier: dpag_access_token_lifetime
+                    owl.filler: dpag:token_lifetime
+
+    RestrictedAccess:
+        description: Configuration for role-based and specially restricted data access
+        class_uri: odrl:Prohibition
+        attributes:
+            role_based_permissions:
+                description: Map of roles to their permitted field access
+                multivalued: true
+                range: RolePermission
+                slot_uri: xacml:Role
+                annotations:
+                    sql_identifier: dpag_access_role_permissions
+                    owl.filler: dpag:role_based_permissions
+            restricted_fields:
+                description: List of field identifiers under restricted access
+                multivalued: true
+                range: string
+                slot_uri: odrl:prohibit
+                annotations:
+                    sql_identifier: dpag_access_restricted_fields
+                    owl.filler: odrl:prohibit
+            access_request_process:
+                description: URL or description of process to request access
+                range: string
+                slot_uri: schema:HowToSection
+                annotations:
+                    sql_identifier: dpag_access_request_process
+                    owl.filler: dpag:access_request_process
+            access_justification_required:
+                description: Whether access requests require justification
+                range: boolean
+                slot_uri: dpv:hasJustification
+                annotations:
+                    sql_identifier: dpag_access_justification_required
+                    owl.filler: dpv:hasJustification
+
+    RolePermission:
+        description: Mapping of a role to its permitted data access
+        class_uri: xacml:Role
+        attributes:
+            role_name:
+                description: Name or identifier of the role
+                required: true
+                range: string
+                slot_uri: foaf:name
+                annotations:
+                    sql_identifier: dpag_role_name
+                    owl.filler: foaf:name
+            permitted_fields:
+                description: Fields this role can access
+                multivalued: true
+                range: string
+                slot_uri: acl:accessToClass
+                annotations:
+                    sql_identifier: dpag_role_permitted_fields
+                    owl.filler: dpag:permitted_fields
+            role_description:
+                description: Description of the role's purpose and scope
+                range: string
+                slot_uri: dcterms:description
+                annotations:
+                    sql_identifier: dpag_role_description
+                    owl.filler: dcterms:description
+
+    SecuritySettings:
+        description: Security configuration for data protection in transit and at rest
+        class_uri: sec:SecurityConfiguration
+        attributes:
+            encryption_method:
+                description: Encryption method for data in transit
+                range: EncryptionMethodEnum
+                slot_uri: sec:encryptionAlgorithm
+                annotations:
+                    sql_identifier: dpag_security_encryption_method
+                    owl.filler: sec:encryptionAlgorithm
+            data_classification:
+                description: Security classification level of the data
+                range: DataClassificationEnum
+                slot_uri: dpv:hasDataCategory
+                annotations:
+                    sql_identifier: dpag_security_data_classification
+                    owl.filler: dpv:hasDataCategory
+            transport_security:
+                description: Transport layer security configuration
+                range: TransportSecurityEnum
+                slot_uri: sec:transportSecurity
+                annotations:
+                    sql_identifier: dpag_security_transport
+                    owl.filler: dpag:transport_security
+            access_attempt_logging:
+                description: Configuration for logging access attempts
+                range: AccessLogging
+                slot_uri: prov:wasGeneratedBy
+                annotations:
+                    sql_identifier: dpag_security_access_logging
+                    owl.filler: dpag:access_attempt_logging
+            integrity_verification:
+                description: Method for verifying data integrity
+                range: string
+                slot_uri: sec:digestAlgorithm
+                annotations:
+                    sql_identifier: dpag_security_integrity_method
+                    owl.filler: sec:digestAlgorithm
+
+    AccessLogging:
+        description: Configuration for logging access attempts and security events
+        class_uri: prov:Activity
+        attributes:
+            log_failed_attempts:
+                description: Whether to log failed access attempts
+                range: boolean
+                slot_uri: prov:wasInvalidatedBy
+                annotations:
+                    sql_identifier: dpag_log_failed_attempts
+                    owl.filler: dpag:log_failed_attempts
+            log_permission_checks:
+                description: Whether to log permission check events
+                range: boolean
+                slot_uri: prov:hadActivity
+                annotations:
+                    sql_identifier: dpag_log_permission_checks
+                    owl.filler: dpag:log_permission_checks
+            log_retention_days:
+                description: Number of days to retain access logs
+                range: integer
+                slot_uri: prov:generatedAtTime
+                annotations:
+                    sql_identifier: dpag_log_retention_days
+                    owl.filler: dpag:log_retention_days
+            log_storage_location:
+                description: Where access logs are stored
+                range: string
+                slot_uri: prov:atLocation
+                annotations:
+                    sql_identifier: dpag_log_storage_location
+                    owl.filler: prov:atLocation
+
+    ConsentManagement:
+        description: GDPR-compliant consent handling and management
+        class_uri: dpv:Consent
+        attributes:
+            consent_required:
+                description: Whether consent is required for data access
+                range: boolean
+                slot_uri: dpv:hasLegalBasis
+                annotations:
+                    sql_identifier: dpag_consent_required
+                    owl.filler: dpv:hasLegalBasis
+            consent_scope:
+                description: Scope and purpose of the consent
+                multivalued: true
+                range: string
+                slot_uri: dpv:hasPurpose
+                annotations:
+                    sql_identifier: dpag_consent_scope
+                    owl.filler: dpv:hasPurpose
+            consent_revocation_method:
+                description: Method or endpoint for revoking consent
+                range: string
+                slot_uri: dpv:hasWithdrawalMethod
+                annotations:
+                    sql_identifier: dpag_consent_revocation_method
+                    owl.filler: dpv:hasWithdrawalMethod
+            consent_duration:
+                description: Duration of consent validity in days
+                range: integer
+                slot_uri: dpv:hasDuration
+                annotations:
+                    sql_identifier: dpag_consent_duration
+                    owl.filler: dpv:hasDuration
+            consent_granularity:
+                description: Level of granularity for consent (field-level, record-level, etc.)
+                range: string
+                slot_uri: dpv:hasDataSubjectCategory
+                annotations:
+                    sql_identifier: dpag_consent_granularity
+                    owl.filler: dpag:consent_granularity
+
+enums:
+    AuthenticationMethodEnum:
+        description: Supported authentication methods
+        permissible_values:
+            OAUTH2:
+                description: OAuth 2.0 authentication
+                meaning: oauth:OAuth2
+            API_KEY:
+                description: API key authentication
+                meaning: sec:APIKey
+            CERTIFICATE:
+                description: X.509 certificate authentication
+                meaning: cert:X509Certificate
+            JWT:
+                description: JSON Web Token authentication
+                meaning: sec:JsonWebToken
+            BASIC:
+                description: HTTP Basic authentication
+                meaning: sec:BasicAuthentication
+            SAML:
+                description: SAML authentication
+                meaning: sec:SAML
+            OIDC:
+                description: OpenID Connect authentication
+                meaning: oauth:OpenIDConnect
+
+    DataClassificationEnum:
+        description: Data security classification levels
+        permissible_values:
+            PUBLIC:
+                description: Publicly accessible data
+                meaning: dpv:PublicData
+            INTERNAL:
+                description: Internal use only
+                meaning: dpv:InternalData
+            CONFIDENTIAL:
+                description: Confidential data
+                meaning: dpv:ConfidentialData
+            SECRET:
+                description: Secret data requiring highest protection
+                meaning: dpv:SecretData
+            PERSONAL:
+                description: Personal data under GDPR
+                meaning: dpv:PersonalData
+
+    TransportSecurityEnum:
+        description: Transport layer security protocols
+        permissible_values:
+            TLS_1_2:
+                description: TLS version 1.2
+                meaning: sec:TLS12
+            TLS_1_3:
+                description: TLS version 1.3
+                meaning: sec:TLS13
+            MTLS:
+                description: Mutual TLS authentication
+                meaning: sec:MutualTLS
+            HTTPS:
+                description: HTTP over TLS
+                meaning: sec:HTTPS
+            VPN:
+                description: Virtual Private Network
+                meaning: sec:VPN
+            API_SIGNATURE:
+                description: API request signatures
+                meaning: sec:HTTPSignature
+
+    EncryptionMethodEnum:
+        description: Supported encryption algorithms
+        permissible_values:
+            AES_256_GCM:
+                description: AES 256-bit in GCM mode
+                meaning: sec:AES256GCM
+            AES_256_CBC:
+                description: AES 256-bit in CBC mode
+                meaning: sec:AES256CBC
+            RSA_2048:
+                description: RSA 2048-bit encryption
+                meaning: sec:RSA2048
+            RSA_4096:
+                description: RSA 4096-bit encryption
+                meaning: sec:RSA4096
+            CHACHA20_POLY1305:
+                description: ChaCha20-Poly1305 AEAD
+                meaning: sec:ChaCha20Poly1305
+            ECDH:
+                description: Elliptic Curve Diffie-Hellman
+                meaning: sec:ECDH
