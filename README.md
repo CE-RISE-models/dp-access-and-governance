@@ -211,6 +211,7 @@ https://codeberg.org/CE-RISE-models/dpp-access-and-governance/src/tag/pages-v1.2
 
 Files available in that directory typically include:
 
+- schema.yaml
 - schema.json
 - shacl.ttl
 - model.ttl
