@@ -1,0 +1,3385 @@
+@prefix acl: <http://www.w3.org/ns/auth/acl#> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dpag: <https://ce-rise-models.codeberg.page/dpp-access-and-governance/> .
+@prefix dpv: <https://w3id.org/dpv#> .
+@prefix linkml: <https://w3id.org/linkml/> .
+@prefix oauth: <https://www.w3.org/ns/auth/oauth#> .
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sec: <https://w3id.org/security#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xacml: <urn:oasis:names:tc:xacml:3.0:core:schema:wd-17#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/.owl.ttl> a owl:Ontology ;
+    rdfs:label "dpp_access_and_governance" ;
+    dcterms:license "CC BY-NC 4.0" ;
+    dcterms:title "CE-RISE DPP Access and Governance Data Model" ;
+    pav:version "0.0.1" ;
+    skos:definition """Operational and access-related metadata that governs how DPP records are stored, exposed, shared, and maintained across systems. Full implementation with all five stages complete.
+""" .
+
+dpag:APISpecification a owl:Class ;
+    rdfs:label "APISpecification" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:api_version ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+            owl:onProperty dpag:api_authentication ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:RateLimit ;
+            owl:onProperty dpag:rate_limits ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:api_authentication ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:rate_limits ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:api_authentication ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:api_endpoints ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:api_documentation_url ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:api_version ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:api_documentation_url ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:api_endpoints ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:api_version ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:api_documentation_url ] ;
+    skos:definition "API endpoint definitions and configuration" ;
+    skos:exactMatch dcat:DataService ;
+    skos:inScheme dpag: .
+
+dpag:AccessControl a owl:Class ;
+    rdfs:label "AccessControl" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom dpag:AccessLevels ;
+            owl:onProperty dpag:access_levels ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:ConsentManagement ;
+            owl:onProperty dpag:consent_management ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:security_settings ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:access_levels ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consent_management ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:security_settings ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consent_management ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:access_levels ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:SecuritySettings ;
+            owl:onProperty dpag:security_settings ] ;
+    skos:definition """Comprehensive access control configuration including access levels, security settings, and consent management for DPP data
+""" ;
+    skos:exactMatch acl:AccessControl ;
+    skos:inScheme dpag: .
+
+dpag:AccessLevels a owl:Class ;
+    rdfs:label "AccessLevels" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:public_access ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:public_access ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:AuthenticatedAccess ;
+            owl:onProperty dpag:authenticated_access ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:RestrictedAccess ;
+            owl:onProperty dpag:restricted_access ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:restricted_access ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:authenticated_access ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:restricted_access ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:PublicAccess ;
+            owl:onProperty dpag:public_access ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:authenticated_access ] ;
+    skos:definition "Three-tier access model for granular data access control" ;
+    skos:exactMatch odrl:Permission ;
+    skos:inScheme dpag: .
+
+dpag:AccessLogging a owl:Class ;
+    rdfs:label "AccessLogging" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:log_retention_days ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:log_permission_checks ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:log_failed_attempts ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:log_permission_checks ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:log_failed_attempts ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:log_storage_location ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:log_storage_location ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:log_retention_days ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:log_storage_location ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:log_failed_attempts ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:log_permission_checks ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:log_retention_days ] ;
+    skos:definition "Configuration for logging access attempts and security events" ;
+    skos:exactMatch prov:Activity ;
+    skos:inScheme dpag: .
+
+dpag:AuthenticatedAccess a owl:Class ;
+    rdfs:label "AuthenticatedAccess" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:authenticated_fields ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:authentication_method ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:token_lifetime ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:token_lifetime ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+            owl:onProperty dpag:authentication_method ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:authentication_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:authentication_method ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:token_lifetime ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:authentication_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:authenticated_fields ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:authentication_endpoint ] ;
+    skos:definition "Configuration for data requiring authentication" ;
+    skos:exactMatch acl:AuthenticatedAgent ;
+    skos:inScheme dpag: .
+
+dpag:CarrierUpdateMechanism a owl:Class ;
+    rdfs:label "CarrierUpdateMechanism" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:offline_capability ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:update_frequency ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:update_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:update_method ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:update_endpoint ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:update_frequency ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> ;
+            owl:onProperty dpag:update_method ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:offline_capability ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:update_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:offline_capability ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:cache_duration ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:update_method ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:cache_duration ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:update_frequency ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:cache_duration ] ;
+    skos:definition "Configuration for how carrier data is updated and maintained" ;
+    skos:exactMatch dpag:UpdateMechanism ;
+    skos:inScheme dpag: .
+
+dpag:ConsentManagement a owl:Class ;
+    rdfs:label "ConsentManagement" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consent_granularity ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consent_duration ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consent_required ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consent_duration ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consent_revocation_method ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:consent_required ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:consent_granularity ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:consent_revocation_method ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:consent_duration ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consent_scope ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consent_required ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:consent_scope ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consent_granularity ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consent_revocation_method ] ;
+    skos:definition "GDPR-compliant consent handling and management" ;
+    skos:exactMatch dpv:Consent ;
+    skos:inScheme dpag: .
+
+dpag:ConsumerSystem a owl:Class ;
+    rdfs:label "ConsumerSystem" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:usage_restrictions ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+            owl:onProperty dpag:consumer_type ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consumer_name ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consumer_name ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consumer_identifier ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:usage_tracking ],
+        [ a owl:Restriction ;
+            owl:minCardinality 1 ;
+            owl:onProperty dpag:consumer_identifier ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:consumer_identifier ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:usage_restrictions ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:usage_tracking ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:authorized_scopes ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:consumer_name ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:authorized_scopes ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:consumer_type ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consumer_type ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:UsageTracking ;
+            owl:onProperty dpag:usage_tracking ] ;
+    skos:definition "Configuration for a downstream system consuming data" ;
+    skos:exactMatch prov:Agent ;
+    skos:inScheme dpag: .
+
+dpag:DPPAccessAndGovernance a owl:Class ;
+    rdfs:label "DPPAccessAndGovernance" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:data_carrier ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:interoperability_configuration ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:AccessControl ;
+            owl:onProperty dpag:access_control ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:data_longevity ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:data_carrier ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:SystemIntegration ;
+            owl:onProperty dpag:system_integration ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:DataLongevity ;
+            owl:onProperty dpag:data_longevity ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:InteroperabilityConfiguration ;
+            owl:onProperty dpag:interoperability_configuration ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:access_control ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:interoperability_configuration ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:access_control ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:system_integration ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:system_integration ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:DataCarrier ;
+            owl:onProperty dpag:data_carrier ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:data_longevity ] ;
+    skos:definition """Root class for operational and access-related metadata governing DPP records. Full implementation includes all five stages: Access Control, Data Carrier, Data Longevity, Interoperability, and System Integration mechanisms.
+""" ;
+    skos:exactMatch dpag:DPPAccessAndGovernance ;
+    skos:inScheme dpag: .
+
+dpag:DataCarrier a owl:Class ;
+    rdfs:label "DataCarrier" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom dpag:CarrierUpdateMechanism ;
+            owl:onProperty dpag:carrier_update_mechanism ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:carrier_update_mechanism ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:carrier_type ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:carrier_capacity ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:carrier_location ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:carrier_capacity ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+            owl:onProperty dpag:carrier_type ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:carrier_capacity ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:carrier_type ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:carrier_redundancy ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:carrier_location ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:CarrierRedundancy ;
+            owl:onProperty dpag:carrier_redundancy ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:carrier_update_mechanism ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:CarrierLocation ;
+            owl:onProperty dpag:carrier_location ] ;
+    skos:definition """Configuration specifying how and where DPP data is physically or digitally stored, including carrier types, capacity, location, redundancy, and update mechanisms
+""" ;
+    skos:exactMatch dcat:Distribution ;
+    skos:inScheme dpag: .
+
+dpag:DataSourceSystem a owl:Class ;
+    rdfs:label "DataSourceSystem" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom dpag:DataMapping ;
+            owl:onProperty dpag:data_mappings ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:connection_endpoint ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:source_system_identifier ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:source_system_name ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:connection_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:source_system_name ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:data_mappings ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:dateTime ;
+            owl:onProperty dpag:last_sync_timestamp ],
+        [ a owl:Restriction ;
+            owl:minCardinality 1 ;
+            owl:onProperty dpag:source_system_identifier ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:source_system_name ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:sync_frequency ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:connection_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:sync_frequency ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:source_system_type ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:source_system_type ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:last_sync_timestamp ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:sync_frequency ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:source_system_identifier ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+            owl:onProperty dpag:source_system_type ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:last_sync_timestamp ] ;
+    skos:definition "Configuration for an upstream system providing data" ;
+    skos:exactMatch prov:Agent ;
+    skos:inScheme dpag: .
+
+dpag:PublicAccess a owl:Class ;
+    rdfs:label "PublicAccess" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:public_access_url ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:public_data_license ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:public_access_url ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:public_fields ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:public_data_license ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:public_data_license ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:public_access_url ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:public_fields ] ;
+    skos:definition "Configuration for data that can be accessed without authentication" ;
+    skos:exactMatch acl:Read ;
+    skos:inScheme dpag: .
+
+dpag:RestrictedAccess a owl:Class ;
+    rdfs:label "RestrictedAccess" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom dpag:RolePermission ;
+            owl:onProperty dpag:role_based_permissions ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:role_based_permissions ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:access_justification_required ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:access_request_process ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:access_request_process ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:access_request_process ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:access_justification_required ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:restricted_fields ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:restricted_fields ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:access_justification_required ] ;
+    skos:definition "Configuration for role-based and specially restricted data access" ;
+    skos:exactMatch odrl:Prohibition ;
+    skos:inScheme dpag: .
+
+dpag:RolePermission a owl:Class ;
+    rdfs:label "RolePermission" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:permitted_fields ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:role_name ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:role_name ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:role_description ],
+        [ a owl:Restriction ;
+            owl:minCardinality 1 ;
+            owl:onProperty dpag:role_name ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:role_description ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:role_description ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:permitted_fields ] ;
+    skos:definition "Mapping of a role to its permitted data access" ;
+    skos:exactMatch xacml:Role ;
+    skos:inScheme dpag: .
+
+dpag:SecuritySettings a owl:Class ;
+    rdfs:label "SecuritySettings" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> ;
+            owl:onProperty dpag:transport_security ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DataClassificationEnum> ;
+            owl:onProperty dpag:data_classification ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:access_attempt_logging ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:integrity_verification ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:data_classification ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:transport_security ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:data_classification ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:AccessLogging ;
+            owl:onProperty dpag:access_attempt_logging ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:encryption_method ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:transport_security ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+            owl:onProperty dpag:encryption_method ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:access_attempt_logging ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:integrity_verification ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:encryption_method ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:integrity_verification ] ;
+    skos:definition "Security configuration for data protection in transit and at rest" ;
+    skos:exactMatch sec:SecurityConfiguration ;
+    skos:inScheme dpag: .
+
+dpag:StandardsCompliance a owl:Class ;
+    rdfs:label "StandardsCompliance" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:validation_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:compliance_standards ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:validation_endpoint ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:conformance_certificates ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:compliance_standards ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:compliance_level ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:compliance_level ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:compliance_level ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:conformance_certificates ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:validation_endpoint ] ;
+    skos:definition "Industry standards and certification compliance" ;
+    skos:exactMatch dcterms:Standard ;
+    skos:inScheme dpag: .
+
+dpag:UsageTracking a owl:Class ;
+    rdfs:label "UsageTracking" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:usage_log_retention ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:usage_analytics_enabled ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:track_access ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:track_modifications ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:usage_analytics_enabled ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:track_modifications ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:track_modifications ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:usage_analytics_enabled ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:usage_log_retention ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:usage_log_retention ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:track_access ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:track_access ] ;
+    skos:definition "Configuration for tracking how data is used" ;
+    skos:exactMatch prov:Activity ;
+    skos:inScheme dpag: .
+
+cert:X509Certificate a owl:Class ;
+    rdfs:label "CERTIFICATE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+    skos:definition "X.509 certificate authentication" .
+
+dpag:AMQP a owl:Class ;
+    rdfs:label "AMQP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SubscriptionProtocolEnum> ;
+    skos:definition "Advanced Message Queuing Protocol" .
+
+dpag:APIService a owl:Class ;
+    rdfs:label "API_SERVICE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "External API service" .
+
+dpag:AnalyticsPlatform a owl:Class ;
+    rdfs:label "ANALYTICS" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Analytics platform" .
+
+dpag:ArchivalDisposal a owl:Class ;
+    rdfs:label "ARCHIVAL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> ;
+    skos:definition "Move to long-term archive" .
+
+dpag:ArchivalStrategy a owl:Class ;
+    rdfs:label "ArchivalStrategy" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:archive_format ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:archive_retrieval_time ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:archive_integrity_check ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:archive_access_process ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+            owl:onProperty dpag:archive_encryption ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:archive_access_process ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:archive_integrity_check ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:archive_retrieval_time ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:archive_location ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:archive_encryption ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:archive_integrity_check ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:archive_format ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+            owl:onProperty dpag:archive_format ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:archive_location ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:archive_location ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:archive_encryption ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:archive_access_process ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:archive_retrieval_time ] ;
+    skos:definition "Long-term data preservation and archival configuration" ;
+    skos:exactMatch dpag:ArchivalStrategy ;
+    skos:inScheme dpag: .
+
+dpag:Archive a owl:Class ;
+    rdfs:label "ARCHIVE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RedundancyLevelEnum> ;
+    skos:definition "Long-term archive carrier" .
+
+dpag:AvailabilityCommitment a owl:Class ;
+    rdfs:label "AvailabilityCommitment" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:guaranteed_availability_period ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:disaster_recovery_time ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:availability_zones ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:disaster_recovery_time ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:service_level_agreement ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:maintenance_windows ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:disaster_recovery_time ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:service_level_agreement ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:guaranteed_availability_period ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:MaintenanceWindow ;
+            owl:onProperty dpag:maintenance_windows ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:guaranteed_availability_period ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:service_level_agreement ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:availability_zones ] ;
+    skos:definition "Service level agreements and availability guarantees" ;
+    skos:exactMatch dpag:AvailabilityCommitment ;
+    skos:inScheme dpag: .
+
+dpag:BagItArchive a owl:Class ;
+    rdfs:label "BAGIT" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+    skos:definition "BagIt format for digital preservation" .
+
+dpag:Barcode a owl:Class ;
+    rdfs:label "BARCODE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Traditional barcode (1D or 2D)" .
+
+dpag:BidirectionalUpdate a owl:Class ;
+    rdfs:label "BIDIRECTIONAL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> ;
+    skos:definition "Both push and pull supported" .
+
+dpag:Blockchain a owl:Class ;
+    rdfs:label "BLOCKCHAIN" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Blockchain or DLT storage" .
+
+dpag:BrotliCompression a owl:Class ;
+    rdfs:label "BROTLI" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CompressionMethodEnum> ;
+    skos:definition "Brotli compression" .
+
+dpag:CapacityMetrics a owl:Class ;
+    rdfs:label "CapacityMetrics" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:bandwidth_usage ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:storage_capacity ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:compute_utilization ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:storage_usage ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:storage_usage ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:bandwidth_usage ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:compute_utilization ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:storage_usage ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:compute_utilization ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:storage_capacity ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:storage_capacity ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:bandwidth_usage ] ;
+    skos:definition "Capacity and resource usage metrics" ;
+    skos:exactMatch dpag:CapacityMetrics ;
+    skos:inScheme dpag: .
+
+dpag:CarrierLocation a owl:Class ;
+    rdfs:label "CarrierLocation" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:access_instructions ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:physical_location ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:physical_location ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:LocationTypeEnum> ;
+            owl:onProperty dpag:location_type ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:digital_location ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:location_type ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:digital_location ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:access_instructions ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:digital_location ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:location_type ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:access_instructions ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:physical_location ] ;
+    skos:definition "Physical or digital location details for the data carrier" ;
+    skos:exactMatch prov:Location ;
+    skos:inScheme dpag: .
+
+dpag:CarrierRedundancy a owl:Class ;
+    rdfs:label "CarrierRedundancy" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:redundancy_level ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:failover_mechanism ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RedundancyLevelEnum> ;
+            owl:onProperty dpag:redundancy_level ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:backup_location ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+            owl:onProperty dpag:backup_carrier_type ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:failover_mechanism ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:CarrierLocation ;
+            owl:onProperty dpag:backup_location ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:failover_mechanism ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:backup_carrier_type ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:sync_frequency ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:redundancy_level ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:backup_carrier_type ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:sync_frequency ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:sync_frequency ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:backup_location ] ;
+    skos:definition "Backup and redundancy configuration for data carriers" ;
+    skos:exactMatch dpag:CarrierRedundancy ;
+    skos:inScheme dpag: .
+
+dpag:CloudStorage a owl:Class ;
+    rdfs:label "CLOUD_STORAGE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Cloud storage service" .
+
+dpag:CoAP a owl:Class ;
+    rdfs:label "COAP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "Constrained Application Protocol" .
+
+dpag:ContentTypeNegotiation a owl:Class ;
+    rdfs:label "CONTENT_TYPE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:FormatNegotiationEnum> ;
+    skos:definition "Content-Type header negotiation" .
+
+dpag:DataLongevity a owl:Class ;
+    rdfs:label "DataLongevity" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:availability_commitment ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:DisposalPolicy ;
+            owl:onProperty dpag:disposal_policy ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:archival_strategy ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:retention_policy ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:retention_policy ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:AvailabilityCommitment ;
+            owl:onProperty dpag:availability_commitment ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:ArchivalStrategy ;
+            owl:onProperty dpag:archival_strategy ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:archival_strategy ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:disposal_policy ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:disposal_policy ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:RetentionPolicy ;
+            owl:onProperty dpag:retention_policy ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:availability_commitment ] ;
+    skos:definition """Lifecycle policies and strategies for data retention, availability commitments, archival processes, and disposal policies throughout the DPP data lifecycle
+""" ;
+    skos:exactMatch dpag:DataLongevity ;
+    skos:inScheme dpag: .
+
+dpag:DataMapping a owl:Class ;
+    rdfs:label "DataMapping" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:source_field ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:target_field ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:source_field ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:target_field ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:transformation_rule ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:transformation_rule ],
+        [ a owl:Restriction ;
+            owl:minCardinality 1 ;
+            owl:onProperty dpag:source_field ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:transformation_rule ],
+        [ a owl:Restriction ;
+            owl:minCardinality 1 ;
+            owl:onProperty dpag:target_field ] ;
+    skos:definition "Mapping between source and target data fields" ;
+    skos:exactMatch dpag:DataMapping ;
+    skos:inScheme dpag: .
+
+dpag:Database a owl:Class ;
+    rdfs:label "DATABASE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Traditional database storage" .
+
+dpag:DatabaseSource a owl:Class ;
+    rdfs:label "DATABASE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "Direct database connection" .
+
+dpag:DeflateCompression a owl:Class ;
+    rdfs:label "DEFLATE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CompressionMethodEnum> ;
+    skos:definition "Deflate compression" .
+
+dpag:Degraded a owl:Class ;
+    rdfs:label "DEGRADED" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AvailabilityStatusEnum> ;
+    skos:definition "Degraded performance" .
+
+dpag:Deletion a owl:Class ;
+    rdfs:label "DELETION" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> ;
+    skos:definition "Simple deletion from storage" .
+
+dpag:DisposalPolicy a owl:Class ;
+    rdfs:label "DisposalPolicy" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:legal_hold_check ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:disposal_notification ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:disposal_method ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> ;
+            owl:onProperty dpag:disposal_method ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:legal_hold_check ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:disposal_notification ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:disposal_criteria ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:disposal_verification ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:disposal_criteria ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:disposal_method ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:boolean ;
+            owl:onProperty dpag:legal_hold_check ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:disposal_verification ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:disposal_verification ] ;
+    skos:definition "Policies governing when and how data should be disposed" ;
+    skos:exactMatch dpag:DisposalPolicy ;
+    skos:inScheme dpag: .
+
+dpag:ERPSystem a owl:Class ;
+    rdfs:label "ERP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "Enterprise Resource Planning system" .
+
+dpag:EventDrivenUpdate a owl:Class ;
+    rdfs:label "EVENT_DRIVEN" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> ;
+    skos:definition "Updates triggered by events" .
+
+dpag:FTP a owl:Class ;
+    rdfs:label "FTP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "File Transfer Protocol" .
+
+dpag:FileExtensionNegotiation a owl:Class ;
+    rdfs:label "FILE_EXTENSION" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:FormatNegotiationEnum> ;
+    skos:definition "Format determined by file extension" .
+
+dpag:FileSystem a owl:Class ;
+    rdfs:label "FILE_SYSTEM" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "File system storage" .
+
+dpag:FileSystemSource a owl:Class ;
+    rdfs:label "FILE_SYSTEM" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "File system source" .
+
+dpag:FormatDelivery a owl:Class ;
+    rdfs:label "FormatDelivery" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:format_conversion_service ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:supported_formats ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:default_format ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:format_negotiation ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:format_conversion_service ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:supported_formats ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:FormatNegotiationEnum> ;
+            owl:onProperty dpag:format_negotiation ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CompressionMethodEnum> ;
+            owl:onProperty dpag:compression_options ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:default_format ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:format_negotiation ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:compression_options ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:anyURI ;
+            owl:onProperty dpag:format_conversion_service ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:default_format ] ;
+    skos:definition "Configuration for format negotiation and content delivery" ;
+    skos:exactMatch dpag:FormatDelivery ;
+    skos:inScheme dpag: .
+
+dpag:GraphQL a owl:Class ;
+    rdfs:label "GRAPHQL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> ;
+    skos:definition "GraphQL API" .
+
+dpag:GzipCompression a owl:Class ;
+    rdfs:label "GZIP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CompressionMethodEnum> ;
+    skos:definition "GZIP compression" .
+
+dpag:HTTP2 a owl:Class ;
+    rdfs:label "HTTP2" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "HTTP/2 protocol" .
+
+dpag:HTTP3 a owl:Class ;
+    rdfs:label "HTTP3" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "HTTP/3 with QUIC" .
+
+dpag:HTTPS a owl:Class ;
+    rdfs:label "HTTPS" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "HTTP over TLS" .
+
+dpag:HttpAcceptNegotiation a owl:Class ;
+    rdfs:label "HTTP_ACCEPT" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:FormatNegotiationEnum> ;
+    skos:definition "HTTP Accept header negotiation" .
+
+dpag:HybridLocation a owl:Class ;
+    rdfs:label "HYBRID" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:LocationTypeEnum> ;
+    skos:definition "Both physical and digital aspects" .
+
+dpag:IPFS a owl:Class ;
+    rdfs:label "IPFS" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "InterPlanetary File System" .
+
+dpag:InteroperabilityConfiguration a owl:Class ;
+    rdfs:label "InteroperabilityConfiguration" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:api_specification ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:standards_compliance ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:ProtocolSupport ;
+            owl:onProperty dpag:protocol_support ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:api_specification ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:protocol_support ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:protocol_support ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:format_delivery ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:StandardsCompliance ;
+            owl:onProperty dpag:standards_compliance ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:APISpecification ;
+            owl:onProperty dpag:api_specification ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:FormatDelivery ;
+            owl:onProperty dpag:format_delivery ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:format_delivery ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:standards_compliance ] ;
+    skos:definition """Configuration for enabling cross-system data exchange through APIs, format negotiation, protocol support, and standards compliance
+""" ;
+    skos:exactMatch dpag:InteroperabilityConfiguration ;
+    skos:inScheme dpag: .
+
+dpag:IoTPlatform a owl:Class ;
+    rdfs:label "IOT_PLATFORM" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "IoT data platform" .
+
+dpag:JsonLdArchive a owl:Class ;
+    rdfs:label "JSON_LD" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+    skos:definition "JSON-LD for linked data" .
+
+dpag:MESSystem a owl:Class ;
+    rdfs:label "MES" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "Manufacturing Execution System" .
+
+dpag:MQTT a owl:Class ;
+    rdfs:label "MQTT" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "Message Queuing Telemetry Transport" .
+
+dpag:MQTTSubscription a owl:Class ;
+    rdfs:label "MQTT_SUB" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SubscriptionProtocolEnum> ;
+    skos:definition "MQTT subscription" .
+
+dpag:Maintenance a owl:Class ;
+    rdfs:label "MAINTENANCE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AvailabilityStatusEnum> ;
+    skos:definition "Under maintenance" .
+
+dpag:MaintenanceWindow a owl:Class ;
+    rdfs:label "MaintenanceWindow" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:window_start ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:window_duration ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:window_duration ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:window_recurrence ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:window_duration ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:advance_notice ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:window_recurrence ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:dateTime ;
+            owl:onProperty dpag:window_start ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:advance_notice ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:advance_notice ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:window_recurrence ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:window_start ] ;
+    skos:definition "Scheduled maintenance period configuration" ;
+    skos:exactMatch dpag:MaintenanceWindow ;
+    skos:inScheme dpag: .
+
+dpag:MajorOutage a owl:Class ;
+    rdfs:label "MAJOR_OUTAGE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AvailabilityStatusEnum> ;
+    skos:definition "Major service outage" .
+
+dpag:Marketplace a owl:Class ;
+    rdfs:label "MARKETPLACE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Digital marketplace" .
+
+dpag:MobileApp a owl:Class ;
+    rdfs:label "MOBILE_APP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Mobile application" .
+
+dpag:NFC a owl:Class ;
+    rdfs:label "NFC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Near Field Communication" .
+
+dpag:NoCompression a owl:Class ;
+    rdfs:label "NONE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CompressionMethodEnum> ;
+    skos:definition "No compression" .
+
+dpag:OData a owl:Class ;
+    rdfs:label "ODATA" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> ;
+    skos:definition "Open Data Protocol" .
+
+dpag:Operational a owl:Class ;
+    rdfs:label "OPERATIONAL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AvailabilityStatusEnum> ;
+    skos:definition "Fully operational" .
+
+dpag:OperationalMetrics a owl:Class ;
+    rdfs:label "OperationalMetrics" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:performance_metrics ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:capacity_metrics ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:CapacityMetrics ;
+            owl:onProperty dpag:capacity_metrics ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:service_metrics ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:capacity_metrics ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:ServiceMetrics ;
+            owl:onProperty dpag:service_metrics ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:service_metrics ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:performance_metrics ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:PerformanceMetrics ;
+            owl:onProperty dpag:performance_metrics ] ;
+    skos:definition "Metrics for monitoring system operations and performance" ;
+    skos:exactMatch dpag:OperationalMetrics ;
+    skos:inScheme dpag: .
+
+dpag:PLMSystem a owl:Class ;
+    rdfs:label "PLM" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "Product Lifecycle Management system" .
+
+dpag:ParquetArchive a owl:Class ;
+    rdfs:label "PARQUET" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+    skos:definition "Apache Parquet format" .
+
+dpag:PartialOutage a owl:Class ;
+    rdfs:label "PARTIAL_OUTAGE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AvailabilityStatusEnum> ;
+    skos:definition "Partial service outage" .
+
+dpag:PartnerSystem a owl:Class ;
+    rdfs:label "PARTNER" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Partner system" .
+
+dpag:PerDay a owl:Class ;
+    rdfs:label "PER_DAY" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RateLimitTypeEnum> ;
+    skos:definition "Limit per day" .
+
+dpag:PerHour a owl:Class ;
+    rdfs:label "PER_HOUR" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RateLimitTypeEnum> ;
+    skos:definition "Limit per hour" .
+
+dpag:PerMinute a owl:Class ;
+    rdfs:label "PER_MINUTE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RateLimitTypeEnum> ;
+    skos:definition "Limit per minute" .
+
+dpag:PerRequest a owl:Class ;
+    rdfs:label "PER_REQUEST" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RateLimitTypeEnum> ;
+    skos:definition "Limit per request" .
+
+dpag:PerSecond a owl:Class ;
+    rdfs:label "PER_SECOND" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RateLimitTypeEnum> ;
+    skos:definition "Limit per second" .
+
+dpag:PerformanceMetrics a owl:Class ;
+    rdfs:label "PerformanceMetrics" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:average_response_time ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:throughput ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:average_response_time ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:average_response_time ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:concurrent_connections ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:throughput ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:latency_p99 ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:throughput ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:latency_p99 ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:concurrent_connections ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:latency_p99 ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:concurrent_connections ] ;
+    skos:definition "Performance-related operational metrics" ;
+    skos:exactMatch dpag:PerformanceMetrics ;
+    skos:inScheme dpag: .
+
+dpag:Primary a owl:Class ;
+    rdfs:label "PRIMARY" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RedundancyLevelEnum> ;
+    skos:definition "Primary data carrier" .
+
+dpag:ProtocolSupport a owl:Class ;
+    rdfs:label "ProtocolSupport" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SubscriptionProtocolEnum> ;
+            owl:onProperty dpag:subscription_protocols ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:protocol_version ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:subscription_protocols ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:query_protocols ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+            owl:onProperty dpag:transfer_protocols ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:protocol_version ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:transfer_protocols ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> ;
+            owl:onProperty dpag:query_protocols ] ;
+    skos:definition "Supported communication and data transfer protocols" ;
+    skos:exactMatch dpag:ProtocolSupport ;
+    skos:inScheme dpag: .
+
+dpag:PullUpdate a owl:Class ;
+    rdfs:label "PULL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> ;
+    skos:definition "Carrier pulls data from source" .
+
+dpag:PushUpdate a owl:Class ;
+    rdfs:label "PUSH" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> ;
+    skos:definition "Data is pushed to the carrier" .
+
+dpag:QRCode a owl:Class ;
+    rdfs:label "QR_CODE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Quick Response code" .
+
+dpag:REST a owl:Class ;
+    rdfs:label "REST" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> ;
+    skos:definition "RESTful API" .
+
+dpag:RFID a owl:Class ;
+    rdfs:label "RFID" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Radio Frequency Identification" .
+
+dpag:RateLimit a owl:Class ;
+    rdfs:label "RateLimit" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:limit_scope ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:limit_type ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RateLimitTypeEnum> ;
+            owl:onProperty dpag:limit_type ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:request_limit ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:limit_scope ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:request_limit ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:limit_scope ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:limit_type ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:request_limit ] ;
+    skos:definition "Rate limiting configuration for API access" ;
+    skos:exactMatch dpag:RateLimit ;
+    skos:inScheme dpag: .
+
+dpag:RegulatorySystem a owl:Class ;
+    rdfs:label "REGULATORY" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Regulatory reporting system" .
+
+dpag:ReportingSystem a owl:Class ;
+    rdfs:label "REPORTING" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Reporting system" .
+
+dpag:RetentionPolicy a owl:Class ;
+    rdfs:label "RetentionPolicy" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:data_categories ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:minimum_retention_period ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:maximum_retention_period ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:data_categories ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:retention_justification ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:minimum_retention_period ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:integer ;
+            owl:onProperty dpag:minimum_retention_period ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:regulatory_requirement ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:regulatory_requirement ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:string ;
+            owl:onProperty dpag:retention_justification ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:maximum_retention_period ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:maximum_retention_period ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:retention_justification ] ;
+    skos:definition "Data retention requirements and justifications" ;
+    skos:exactMatch dpag:RetentionPolicy ;
+    skos:inScheme dpag: .
+
+dpag:SFTP a owl:Class ;
+    rdfs:label "SFTP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "Secure File Transfer Protocol" .
+
+dpag:SPARQL a owl:Class ;
+    rdfs:label "SPARQL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> ;
+    skos:definition "SPARQL query language" .
+
+dpag:SQL a owl:Class ;
+    rdfs:label "SQL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> ;
+    skos:definition "SQL database access" .
+
+dpag:ScheduledUpdate a owl:Class ;
+    rdfs:label "SCHEDULED" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> ;
+    skos:definition "Updates on fixed schedule" .
+
+dpag:Secondary a owl:Class ;
+    rdfs:label "SECONDARY" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RedundancyLevelEnum> ;
+    skos:definition "Secondary backup carrier" .
+
+dpag:SecureDeletion a owl:Class ;
+    rdfs:label "SECURE_DELETION" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> ;
+    skos:definition "Cryptographic secure deletion" .
+
+dpag:ServerSentEvents a owl:Class ;
+    rdfs:label "SSE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SubscriptionProtocolEnum> ;
+    skos:definition "Server-Sent Events" .
+
+dpag:ServiceMetrics a owl:Class ;
+    rdfs:label "ServiceMetrics" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:uptime_percentage ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:sla_compliance ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:sla_compliance ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:availability_status ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:error_rate ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:uptime_percentage ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom xsd:float ;
+            owl:onProperty dpag:error_rate ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:sla_compliance ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:availability_status ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AvailabilityStatusEnum> ;
+            owl:onProperty dpag:availability_status ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:error_rate ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:uptime_percentage ] ;
+    skos:definition "Service-level operational metrics" ;
+    skos:exactMatch dpag:ServiceMetrics ;
+    skos:inScheme dpag: .
+
+dpag:StaticData a owl:Class ;
+    rdfs:label "STATIC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> ;
+    skos:definition "No updates after initial write" .
+
+dpag:StreamingSource a owl:Class ;
+    rdfs:label "STREAMING" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> ;
+    skos:definition "Streaming data source" .
+
+dpag:SystemIntegration a owl:Class ;
+    rdfs:label "SystemIntegration" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:operational_metrics ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:DataSourceSystem ;
+            owl:onProperty dpag:data_source_systems ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:ConsumerSystem ;
+            owl:onProperty dpag:consumer_systems ],
+        [ a owl:Restriction ;
+            owl:maxCardinality 1 ;
+            owl:onProperty dpag:operational_metrics ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:data_source_systems ],
+        [ a owl:Restriction ;
+            owl:allValuesFrom dpag:OperationalMetrics ;
+            owl:onProperty dpag:operational_metrics ],
+        [ a owl:Restriction ;
+            owl:minCardinality 0 ;
+            owl:onProperty dpag:consumer_systems ] ;
+    skos:definition """Configuration for connecting with upstream data sources and downstream consumer systems, including synchronization, usage tracking, and operational monitoring
+""" ;
+    skos:exactMatch dpag:SystemIntegration ;
+    skos:inScheme dpag: .
+
+dpag:TarGzArchive a owl:Class ;
+    rdfs:label "TAR_GZ" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+    skos:definition "TAR with GZIP compression" .
+
+dpag:Tertiary a owl:Class ;
+    rdfs:label "TERTIARY" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RedundancyLevelEnum> ;
+    skos:definition "Tertiary backup carrier" .
+
+dpag:TurtleArchive a owl:Class ;
+    rdfs:label "RDF_TURTLE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+    skos:definition "RDF Turtle format" .
+
+dpag:UrlParameterNegotiation a owl:Class ;
+    rdfs:label "URL_PARAMETER" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:FormatNegotiationEnum> ;
+    skos:definition "Format specified in URL parameter" .
+
+dpag:VisualizationTool a owl:Class ;
+    rdfs:label "VISUALIZATION" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Data visualization tool" .
+
+dpag:WarcArchive a owl:Class ;
+    rdfs:label "WARC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+    skos:definition "Web ARChive format" .
+
+dpag:WebApp a owl:Class ;
+    rdfs:label "WEB_APP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> ;
+    skos:definition "Web application" .
+
+dpag:WebSocket a owl:Class ;
+    rdfs:label "WEBSOCKET" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> ;
+    skos:definition "WebSocket protocol" .
+
+dpag:WebSocketSubscription a owl:Class ;
+    rdfs:label "WEBSOCKET" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SubscriptionProtocolEnum> ;
+    skos:definition "WebSocket for real-time" .
+
+dpag:Webhook a owl:Class ;
+    rdfs:label "WEBHOOK" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SubscriptionProtocolEnum> ;
+    skos:definition "Webhook callbacks" .
+
+dpag:ZipArchive a owl:Class ;
+    rdfs:label "ZIP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> ;
+    skos:definition "ZIP compressed archive" .
+
+dpag:ZipCompression a owl:Class ;
+    rdfs:label "ZIP" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CompressionMethodEnum> ;
+    skos:definition "ZIP compression" .
+
+dpag:api_endpoints a owl:DatatypeProperty ;
+    rdfs:label "api_endpoints" ;
+    skos:definition "List of available API endpoints" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:endpointURL" ;
+    dpag:sql_identifier "dpag_api_endpoints" .
+
+dpag:authenticated_fields a owl:DatatypeProperty ;
+    rdfs:label "authenticated_fields" ;
+    skos:definition "List of field identifiers accessible after authentication" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:authenticated_fields" ;
+    dpag:sql_identifier "dpag_access_auth_fields" .
+
+dpag:authorized_scopes a owl:DatatypeProperty ;
+    rdfs:label "authorized_scopes" ;
+    skos:definition "Data scopes this consumer is authorized to access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "odrl:permission" ;
+    dpag:sql_identifier "dpag_authorized_scopes" .
+
+dpag:availability_zones a owl:DatatypeProperty ;
+    rdfs:label "availability_zones" ;
+    skos:definition "Geographic or logical zones where data is available" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "prov:atLocation" ;
+    dpag:sql_identifier "dpag_availability_zones" .
+
+dpag:carrier_redundancy a owl:ObjectProperty ;
+    rdfs:label "carrier_redundancy" ;
+    skos:definition "Backup and failover carrier configurations" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:carrier_redundancy" ;
+    dpag:sql_identifier "dpag_carrier_redundancy" .
+
+dpag:compliance_standards a owl:DatatypeProperty ;
+    rdfs:label "compliance_standards" ;
+    skos:definition "List of standards complied with (ISO, W3C, GS1, etc.)" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Parameter representation: ISO/IEC 27001, ISO/IEC 27701, SOC2, ETSI standards" ;
+    dpag:owl.filler "dcterms:conformsTo" ;
+    dpag:references "ISO/IEC 27001 (ISMS); ISO/IEC 27701 (PIMS); ETSI EN 303 645 (IoT security)" ;
+    dpag:sql_identifier "dpag_compliance_standards" .
+
+dpag:compression_options a owl:ObjectProperty ;
+    rdfs:label "compression_options" ;
+    skos:definition "Available compression methods" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:compression_options" ;
+    dpag:sql_identifier "dpag_compression_options" .
+
+dpag:conformance_certificates a owl:DatatypeProperty ;
+    rdfs:label "conformance_certificates" ;
+    skos:definition "URLs or identifiers for conformance certificates" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:conformance_certificates" ;
+    dpag:sql_identifier "dpag_conformance_certificates" .
+
+dpag:consent_scope a owl:DatatypeProperty ;
+    rdfs:label "consent_scope" ;
+    skos:definition "Scope and purpose of the consent" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpv:hasPurpose" ;
+    dpag:sql_identifier "dpag_consent_scope" .
+
+dpag:consumer_systems a owl:ObjectProperty ;
+    rdfs:label "consumer_systems" ;
+    skos:definition "Configuration for downstream systems consuming data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:consumer_systems" ;
+    dpag:sql_identifier "dpag_consumer_systems" .
+
+dpag:data_categories a owl:DatatypeProperty ;
+    rdfs:label "data_categories" ;
+    skos:definition "Categories of data covered by this retention policy" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpv:hasDataCategory" ;
+    dpag:sql_identifier "dpag_retention_data_categories" .
+
+dpag:data_mappings a owl:ObjectProperty ;
+    rdfs:label "data_mappings" ;
+    skos:definition "Mappings between source and target data fields" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:data_mappings" ;
+    dpag:sql_identifier "dpag_data_mappings" .
+
+dpag:data_source_systems a owl:ObjectProperty ;
+    rdfs:label "data_source_systems" ;
+    skos:definition "Configuration for upstream systems providing data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:data_source_systems" ;
+    dpag:sql_identifier "dpag_data_source_systems" .
+
+dpag:disposal_criteria a owl:DatatypeProperty ;
+    rdfs:label "disposal_criteria" ;
+    skos:definition "Conditions triggering data disposal" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:disposal_criteria" ;
+    dpag:sql_identifier "dpag_disposal_criteria" .
+
+dpag:disposal_notification a owl:DatatypeProperty ;
+    rdfs:label "disposal_notification" ;
+    skos:definition "Who to notify about disposal" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "prov:wasInformedBy" ;
+    dpag:sql_identifier "dpag_disposal_notification" .
+
+dpag:gRPC a owl:Class ;
+    rdfs:label "GRPC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> ;
+    skos:definition "gRPC protocol" .
+
+dpag:maintenance_windows a owl:ObjectProperty ;
+    rdfs:label "maintenance_windows" ;
+    skos:definition "Scheduled maintenance periods" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:maintenance_windows" ;
+    dpag:sql_identifier "dpag_maintenance_windows" .
+
+dpag:permitted_fields a owl:DatatypeProperty ;
+    rdfs:label "permitted_fields" ;
+    skos:definition "Fields this role can access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:permitted_fields" ;
+    dpag:sql_identifier "dpag_role_permitted_fields" .
+
+dpag:protocol_version a owl:DatatypeProperty ;
+    rdfs:label "protocol_version" ;
+    skos:definition "Specific protocol versions supported" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:protocol_version" ;
+    dpag:sql_identifier "dpag_protocol_versions" .
+
+dpag:public_fields a owl:DatatypeProperty ;
+    rdfs:label "public_fields" ;
+    skos:definition "List of field identifiers that are openly accessible" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:public_fields" ;
+    dpag:sql_identifier "dpag_access_public_fields" .
+
+dpag:query_protocols a owl:ObjectProperty ;
+    rdfs:label "query_protocols" ;
+    skos:definition "Supported query protocols (REST, GraphQL, SPARQL)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:query_protocols" ;
+    dpag:sql_identifier "dpag_query_protocols" .
+
+dpag:rate_limits a owl:ObjectProperty ;
+    rdfs:label "rate_limits" ;
+    skos:definition "API rate limiting configuration" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:rate_limits" ;
+    dpag:sql_identifier "dpag_rate_limits" .
+
+dpag:regulatory_requirement a owl:DatatypeProperty ;
+    rdfs:label "regulatory_requirement" ;
+    skos:definition "Specific regulations requiring this retention" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Parameter representation: e.g., GDPR, ESPR, EU Battery Regulation, national laws" ;
+    dpag:owl.filler "dpv:hasApplicableLaw" ;
+    dpag:references "ESPR (Ecodesign for Sustainable Products Regulation); EU Battery Regulation 2023/1542" ;
+    dpag:sql_identifier "dpag_regulatory_requirement" .
+
+dpag:restricted_fields a owl:DatatypeProperty ;
+    rdfs:label "restricted_fields" ;
+    skos:definition "List of field identifiers under restricted access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "odrl:prohibit" ;
+    dpag:sql_identifier "dpag_access_restricted_fields" .
+
+dpag:role_based_permissions a owl:ObjectProperty ;
+    rdfs:label "role_based_permissions" ;
+    skos:definition "Map of roles to their permitted field access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:role_based_permissions" ;
+    dpag:sql_identifier "dpag_access_role_permissions" .
+
+dpag:subscription_protocols a owl:ObjectProperty ;
+    rdfs:label "subscription_protocols" ;
+    skos:definition "Supported subscription protocols (WebSocket, SSE)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:subscription_protocols" ;
+    dpag:sql_identifier "dpag_subscription_protocols" .
+
+dpag:supported_formats a owl:DatatypeProperty ;
+    rdfs:label "supported_formats" ;
+    skos:definition "List of supported output formats" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:format" ;
+    dpag:sql_identifier "dpag_supported_formats" .
+
+dpag:transfer_protocols a owl:ObjectProperty ;
+    rdfs:label "transfer_protocols" ;
+    skos:definition "Supported data transfer protocols (HTTPS, MQTT, CoAP, etc.)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:transfer_protocols" ;
+    dpag:sql_identifier "dpag_transfer_protocols" .
+
+dpag:usage_restrictions a owl:DatatypeProperty ;
+    rdfs:label "usage_restrictions" ;
+    skos:definition "Restrictions on how consumer can use data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "odrl:prohibition" ;
+    dpag:sql_identifier "dpag_usage_restrictions" .
+
+dpv:Anonymisation a owl:Class ;
+    rdfs:label "ANONYMIZATION" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> ;
+    skos:definition "Remove identifying information" .
+
+dpv:ConfidentialData a owl:Class ;
+    rdfs:label "CONFIDENTIAL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DataClassificationEnum> ;
+    skos:definition "Confidential data" .
+
+dpv:DataAggregation a owl:Class ;
+    rdfs:label "AGGREGATION" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> ;
+    skos:definition "Aggregate into summary statistics" .
+
+dpv:InternalData a owl:Class ;
+    rdfs:label "INTERNAL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DataClassificationEnum> ;
+    skos:definition "Internal use only" .
+
+dpv:PersonalData a owl:Class ;
+    rdfs:label "PERSONAL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DataClassificationEnum> ;
+    skos:definition "Personal data under GDPR" .
+
+dpv:Pseudonymisation a owl:Class ;
+    rdfs:label "PSEUDONYMIZATION" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> ;
+    skos:definition "Replace identifying information" .
+
+dpv:PublicData a owl:Class ;
+    rdfs:label "PUBLIC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DataClassificationEnum> ;
+    skos:definition "Publicly accessible data" .
+
+dpv:SecretData a owl:Class ;
+    rdfs:label "SECRET" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DataClassificationEnum> ;
+    skos:definition "Secret data requiring highest protection" .
+
+sec:AES256CBC a owl:Class ;
+    rdfs:label "AES_256_CBC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+    skos:definition "AES 256-bit in CBC mode" .
+
+sec:AES256GCM a owl:Class ;
+    rdfs:label "AES_256_GCM" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+    skos:definition "AES 256-bit in GCM mode" .
+
+sec:APIKey a owl:Class ;
+    rdfs:label "API_KEY" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+    skos:definition "API key authentication" .
+
+sec:BasicAuthentication a owl:Class ;
+    rdfs:label "BASIC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+    skos:definition "HTTP Basic authentication" .
+
+sec:ChaCha20Poly1305 a owl:Class ;
+    rdfs:label "CHACHA20_POLY1305" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+    skos:definition "ChaCha20-Poly1305 AEAD" .
+
+sec:ECDH a owl:Class ;
+    rdfs:label "ECDH" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+    skos:definition "Elliptic Curve Diffie-Hellman" .
+
+sec:HTTPS a owl:Class ;
+    rdfs:label "HTTPS" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> ;
+    skos:definition "HTTP over TLS" .
+
+sec:HTTPSignature a owl:Class ;
+    rdfs:label "API_SIGNATURE" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> ;
+    skos:definition "API request signatures" .
+
+sec:JsonWebToken a owl:Class ;
+    rdfs:label "JWT" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+    skos:definition "JSON Web Token authentication" .
+
+sec:MutualTLS a owl:Class ;
+    rdfs:label "MTLS" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> ;
+    skos:definition "Mutual TLS authentication" .
+
+sec:RSA2048 a owl:Class ;
+    rdfs:label "RSA_2048" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+    skos:definition "RSA 2048-bit encryption" .
+
+sec:RSA4096 a owl:Class ;
+    rdfs:label "RSA_4096" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> ;
+    skos:definition "RSA 4096-bit encryption" .
+
+sec:SAML a owl:Class ;
+    rdfs:label "SAML" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+    skos:definition "SAML authentication" .
+
+sec:TLS12 a owl:Class ;
+    rdfs:label "TLS_1_2" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> ;
+    skos:definition "TLS version 1.2" .
+
+sec:TLS13 a owl:Class ;
+    rdfs:label "TLS_1_3" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> ;
+    skos:definition "TLS version 1.3" .
+
+sec:VPN a owl:Class ;
+    rdfs:label "VPN" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> ;
+    skos:definition "Virtual Private Network" .
+
+oauth:OAuth2 a owl:Class ;
+    rdfs:label "OAUTH2" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+    skos:definition "OAuth 2.0 authentication" .
+
+oauth:OpenIDConnect a owl:Class ;
+    rdfs:label "OIDC" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> ;
+    skos:definition "OpenID Connect authentication" .
+
+dcat:DataService a owl:Class ;
+    rdfs:label "API" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> ;
+    skos:definition "Application Programming Interface" .
+
+prov:Location a owl:Class ;
+    rdfs:label "PHYSICAL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:LocationTypeEnum> ;
+    skos:definition "Physical world location" .
+
+dpag:access_attempt_logging a owl:ObjectProperty ;
+    rdfs:label "access_attempt_logging" ;
+    skos:definition "Configuration for logging access attempts" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:access_attempt_logging" ;
+    dpag:sql_identifier "dpag_security_access_logging" .
+
+dpag:access_control a owl:ObjectProperty ;
+    rdfs:label "access_control" ;
+    skos:definition "Access control configuration defining who can access what data under what conditions" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:access_control" ;
+    dpag:sql_identifier "dpag_access_control" .
+
+dpag:access_instructions a owl:DatatypeProperty ;
+    rdfs:label "access_instructions" ;
+    skos:definition "Instructions for accessing the carrier at this location" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:access_instructions" ;
+    dpag:sql_identifier "dpag_access_instructions" .
+
+dpag:access_justification_required a owl:DatatypeProperty ;
+    rdfs:label "access_justification_required" ;
+    skos:definition "Whether access requests require justification" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpv:hasJustification" ;
+    dpag:sql_identifier "dpag_access_justification_required" .
+
+dpag:access_levels a owl:ObjectProperty ;
+    rdfs:label "access_levels" ;
+    skos:definition "Multi-tier access model defining public, authenticated, and restricted access" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: compliance with GDPR Article 6/9 for lawful basis of data processing" ;
+    dpag:owl.filler "acl:accessTo" ;
+    dpag:references "GDPR Articles 6, 9, 12-22 (data subject rights); ISO/IEC 27001 (access control)" ;
+    dpag:sql_identifier "dpag_access_levels" .
+
+dpag:access_request_process a owl:DatatypeProperty ;
+    rdfs:label "access_request_process" ;
+    skos:definition "URL or description of process to request access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:access_request_process" ;
+    dpag:sql_identifier "dpag_access_request_process" .
+
+dpag:advance_notice a owl:DatatypeProperty ;
+    rdfs:label "advance_notice" ;
+    skos:definition "Advance notice period for maintenance in hours" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:advance_notice" ;
+    dpag:sql_identifier "dpag_maintenance_notice_hours" .
+
+dpag:api_authentication a owl:ObjectProperty ;
+    rdfs:label "api_authentication" ;
+    skos:definition "Required authentication for API access" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: API authentication required for data security" ;
+    dpag:owl.filler "dpag:api_authentication" ;
+    dpag:references "ISO/IEC 27001 A.14.1.2 (securing application services); OAuth 2.0 (RFC 6749)" ;
+    dpag:sql_identifier "dpag_api_authentication" .
+
+dpag:api_documentation_url a owl:DatatypeProperty ;
+    rdfs:label "api_documentation_url" ;
+    skos:definition "URL to API documentation" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:landingPage" ;
+    dpag:sql_identifier "dpag_api_documentation_url" .
+
+dpag:api_specification a owl:ObjectProperty ;
+    rdfs:label "api_specification" ;
+    skos:definition "RESTful or other API definitions and configurations" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:api_specification" ;
+    dpag:sql_identifier "dpag_api_specification" .
+
+dpag:api_version a owl:DatatypeProperty ;
+    rdfs:label "api_version" ;
+    skos:definition "API version identifier" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:version" ;
+    dpag:sql_identifier "dpag_api_version" .
+
+dpag:archival_strategy a owl:ObjectProperty ;
+    rdfs:label "archival_strategy" ;
+    skos:definition "Long-term preservation and archival approach" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:archival_strategy" ;
+    dpag:sql_identifier "dpag_archival_strategy" .
+
+dpag:archive_access_process a owl:DatatypeProperty ;
+    rdfs:label "archive_access_process" ;
+    skos:definition "Process for accessing archived data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:archive_access_process" ;
+    dpag:sql_identifier "dpag_archive_access_process" .
+
+dpag:archive_encryption a owl:ObjectProperty ;
+    rdfs:label "archive_encryption" ;
+    skos:definition "Encryption method for archived data" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: encryption required for data protection compliance" ;
+    dpag:owl.filler "sec:encryptionAlgorithm" ;
+    dpag:references "GDPR Article 32(1)(a) - pseudonymisation and encryption; ISO/IEC 27001" ;
+    dpag:sql_identifier "dpag_archive_encryption" .
+
+dpag:archive_format a owl:ObjectProperty ;
+    rdfs:label "archive_format" ;
+    skos:definition "Format for archived data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:format" ;
+    dpag:sql_identifier "dpag_archive_format" .
+
+dpag:archive_integrity_check a owl:DatatypeProperty ;
+    rdfs:label "archive_integrity_check" ;
+    skos:definition "Method for verifying archive integrity" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "sec:digestAlgorithm" ;
+    dpag:sql_identifier "dpag_archive_integrity_check" .
+
+dpag:archive_location a owl:DatatypeProperty ;
+    rdfs:label "archive_location" ;
+    skos:definition "Where archives are stored" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "prov:atLocation" ;
+    dpag:sql_identifier "dpag_archive_location" .
+
+dpag:archive_retrieval_time a owl:DatatypeProperty ;
+    rdfs:label "archive_retrieval_time" ;
+    skos:definition "Expected time to retrieve from archive in hours" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:archive_retrieval_time" ;
+    dpag:sql_identifier "dpag_archive_retrieval_hours" .
+
+dpag:authenticated_access a owl:ObjectProperty ;
+    rdfs:label "authenticated_access" ;
+    skos:definition "Configuration for authenticated user access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "acl:AuthenticatedAgent" ;
+    dpag:sql_identifier "dpag_access_authenticated" .
+
+dpag:authentication_endpoint a owl:DatatypeProperty ;
+    rdfs:label "authentication_endpoint" ;
+    skos:definition "URL endpoint for authentication services" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "oauth:authorizationEndpoint" ;
+    dpag:sql_identifier "dpag_access_auth_endpoint" .
+
+dpag:authentication_method a owl:ObjectProperty ;
+    rdfs:label "authentication_method" ;
+    skos:definition "Method used for authentication (OAuth2, API key, certificate, etc.)" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: strong authentication required for restricted data access" ;
+    dpag:owl.filler "dpag:authentication_method" ;
+    dpag:references "eIDAS Regulation (EU) 910/2014; ISO/IEC 27001 A.9.2 (user access management)" ;
+    dpag:sql_identifier "dpag_access_auth_method" .
+
+dpag:availability_commitment a owl:ObjectProperty ;
+    rdfs:label "availability_commitment" ;
+    skos:definition "Service level agreements and uptime guarantees" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:availability_commitment" ;
+    dpag:sql_identifier "dpag_availability_commitment" .
+
+dpag:availability_status a owl:ObjectProperty ;
+    rdfs:label "availability_status" ;
+    skos:definition "Current availability status" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:availability_status" ;
+    dpag:sql_identifier "dpag_availability_status" .
+
+dpag:average_response_time a owl:DatatypeProperty ;
+    rdfs:label "average_response_time" ;
+    skos:definition "Average response time in milliseconds" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:average_response_time" ;
+    dpag:sql_identifier "dpag_avg_response_time_ms" .
+
+dpag:backup_carrier_type a owl:ObjectProperty ;
+    rdfs:label "backup_carrier_type" ;
+    skos:definition "Type of carrier used for backup" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:backup_carrier_type" ;
+    dpag:sql_identifier "dpag_backup_carrier_type" .
+
+dpag:backup_location a owl:ObjectProperty ;
+    rdfs:label "backup_location" ;
+    skos:definition "Location of the backup carrier" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:backup_location" ;
+    dpag:sql_identifier "dpag_backup_location" .
+
+dpag:bandwidth_usage a owl:DatatypeProperty ;
+    rdfs:label "bandwidth_usage" ;
+    skos:definition "Current bandwidth usage in bytes per second" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:bandwidth_usage" ;
+    dpag:sql_identifier "dpag_bandwidth_usage_bps" .
+
+dpag:cache_duration a owl:DatatypeProperty ;
+    rdfs:label "cache_duration" ;
+    skos:definition "How long cached data remains valid in seconds" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:cache_duration" ;
+    dpag:sql_identifier "dpag_cache_duration_seconds" .
+
+dpag:capacity_metrics a owl:ObjectProperty ;
+    rdfs:label "capacity_metrics" ;
+    skos:definition "Capacity and resource usage metrics" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:capacity_metrics" ;
+    dpag:sql_identifier "dpag_capacity_metrics" .
+
+dpag:carrier_capacity a owl:DatatypeProperty ;
+    rdfs:label "carrier_capacity" ;
+    skos:definition "Data size limits in bytes for the carrier" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:byteSize" ;
+    dpag:sql_identifier "dpag_carrier_capacity_bytes" .
+
+dpag:carrier_location a owl:ObjectProperty ;
+    rdfs:label "carrier_location" ;
+    skos:definition "Physical or digital location of the carrier" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:carrier_location" ;
+    dpag:sql_identifier "dpag_carrier_location" .
+
+dpag:carrier_type a owl:ObjectProperty ;
+    rdfs:label "carrier_type" ;
+    skos:definition "Type of physical or digital storage mechanism (QR code, RFID, NFC, URL, API, blockchain, etc.)" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: carrier type must be specified for ESPR compliance" ;
+    dpag:owl.filler "dcat:mediaType" ;
+    dpag:references "ESPR Annex III - unique product identifier requirements; ISO/IEC 18000 (RFID standards)" ;
+    dpag:sql_identifier "dpag_carrier_type" .
+
+dpag:carrier_update_mechanism a owl:ObjectProperty ;
+    rdfs:label "carrier_update_mechanism" ;
+    skos:definition "How carrier data is refreshed and synchronized" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:carrier_update_mechanism" ;
+    dpag:sql_identifier "dpag_carrier_update_mechanism" .
+
+dpag:compliance_level a owl:DatatypeProperty ;
+    rdfs:label "compliance_level" ;
+    skos:definition "Level of compliance achieved" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:compliance_level" ;
+    dpag:sql_identifier "dpag_compliance_level" .
+
+dpag:compute_utilization a owl:DatatypeProperty ;
+    rdfs:label "compute_utilization" ;
+    skos:definition "CPU utilization percentage" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:compute_utilization" ;
+    dpag:sql_identifier "dpag_cpu_utilization_percent" .
+
+dpag:concurrent_connections a owl:DatatypeProperty ;
+    rdfs:label "concurrent_connections" ;
+    skos:definition "Maximum concurrent connections supported" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:concurrent_connections" ;
+    dpag:sql_identifier "dpag_concurrent_connections" .
+
+dpag:connection_endpoint a owl:DatatypeProperty ;
+    rdfs:label "connection_endpoint" ;
+    skos:definition "Endpoint for connecting to source system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:endpointURL" ;
+    dpag:sql_identifier "dpag_source_connection_endpoint" .
+
+dpag:consent_duration a owl:DatatypeProperty ;
+    rdfs:label "consent_duration" ;
+    skos:definition "Duration of consent validity in days" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpv:hasDuration" ;
+    dpag:sql_identifier "dpag_consent_duration" .
+
+dpag:consent_granularity a owl:DatatypeProperty ;
+    rdfs:label "consent_granularity" ;
+    skos:definition "Level of granularity for consent (field-level, record-level, etc.)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:consent_granularity" ;
+    dpag:sql_identifier "dpag_consent_granularity" .
+
+dpag:consent_management a owl:ObjectProperty ;
+    rdfs:label "consent_management" ;
+    skos:definition "GDPR-compliant consent handling configuration" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: GDPR Article 7 requirements for valid consent" ;
+    dpag:owl.filler "dpv:hasConsent" ;
+    dpag:references "GDPR Article 7 (conditions for consent); Article 13/14 (information requirements); ePrivacy Directive" ;
+    dpag:sql_identifier "dpag_consent_management" .
+
+dpag:consent_required a owl:DatatypeProperty ;
+    rdfs:label "consent_required" ;
+    skos:definition "Whether consent is required for data access" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: must identify legal basis under GDPR Article 6" ;
+    dpag:owl.filler "dpv:hasLegalBasis" ;
+    dpag:references "GDPR Article 6 (lawfulness of processing); Article 9 (special categories)" ;
+    dpag:sql_identifier "dpag_consent_required" .
+
+dpag:consent_revocation_method a owl:DatatypeProperty ;
+    rdfs:label "consent_revocation_method" ;
+    skos:definition "Method or endpoint for revoking consent" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpv:hasWithdrawalMethod" ;
+    dpag:sql_identifier "dpag_consent_revocation_method" .
+
+dpag:consumer_identifier a owl:DatatypeProperty ;
+    rdfs:label "consumer_identifier" ;
+    skos:definition "Unique identifier for the consumer system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:identifier" ;
+    dpag:sql_identifier "dpag_consumer_id" .
+
+dpag:consumer_name a owl:DatatypeProperty ;
+    rdfs:label "consumer_name" ;
+    skos:definition "Human-readable name of the consumer system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "foaf:name" ;
+    dpag:sql_identifier "dpag_consumer_name" .
+
+dpag:consumer_type a owl:ObjectProperty ;
+    rdfs:label "consumer_type" ;
+    skos:definition "Type of consumer system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:type" ;
+    dpag:sql_identifier "dpag_consumer_type" .
+
+dpag:data_carrier a owl:ObjectProperty ;
+    rdfs:label "data_carrier" ;
+    skos:definition "Configuration for how and where DPP data is stored and accessed" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:data_carrier" ;
+    dpag:sql_identifier "dpag_data_carrier" .
+
+dpag:data_classification a owl:ObjectProperty ;
+    rdfs:label "data_classification" ;
+    skos:definition "Security classification level of the data" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: classification required for compliance with data protection regulations" ;
+    dpag:owl.filler "dpv:hasDataCategory" ;
+    dpag:references "ISO/IEC 27001:2022; GDPR Article 32 (security of processing)" ;
+    dpag:sql_identifier "dpag_security_data_classification" .
+
+dpag:data_longevity a owl:ObjectProperty ;
+    rdfs:label "data_longevity" ;
+    skos:definition "Lifecycle policies for data retention, availability, archival, and disposal" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:data_longevity" ;
+    dpag:sql_identifier "dpag_data_longevity" .
+
+dpag:default_format a owl:DatatypeProperty ;
+    rdfs:label "default_format" ;
+    skos:definition "Default format when none specified" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:default_format" ;
+    dpag:sql_identifier "dpag_default_format" .
+
+dpag:digital_location a owl:DatatypeProperty ;
+    rdfs:label "digital_location" ;
+    skos:definition "URL, URI, or digital endpoint" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:accessURL" ;
+    dpag:sql_identifier "dpag_digital_location" .
+
+dpag:disaster_recovery_time a owl:DatatypeProperty ;
+    rdfs:label "disaster_recovery_time" ;
+    skos:definition "Maximum recovery time objective in hours" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:disaster_recovery_time" ;
+    dpag:sql_identifier "dpag_disaster_recovery_hours" .
+
+dpag:disposal_method a owl:ObjectProperty ;
+    rdfs:label "disposal_method" ;
+    skos:definition "Method for data disposal" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:disposal_method" ;
+    dpag:sql_identifier "dpag_disposal_method" .
+
+dpag:disposal_policy a owl:ObjectProperty ;
+    rdfs:label "disposal_policy" ;
+    skos:definition "Policies for when and how to dispose of data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:disposal_policy" ;
+    dpag:sql_identifier "dpag_disposal_policy" .
+
+dpag:disposal_verification a owl:DatatypeProperty ;
+    rdfs:label "disposal_verification" ;
+    skos:definition "Method for verifying successful disposal" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:disposal_verification" ;
+    dpag:sql_identifier "dpag_disposal_verification" .
+
+dpag:encryption_method a owl:ObjectProperty ;
+    rdfs:label "encryption_method" ;
+    skos:definition "Encryption method for data in transit" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: encryption required for personal and confidential data" ;
+    dpag:owl.filler "sec:encryptionAlgorithm" ;
+    dpag:references "GDPR Article 32(1)(a); ETSI EN 303 645 (cyber security for consumer IoT)" ;
+    dpag:sql_identifier "dpag_security_encryption_method" .
+
+dpag:error_rate a owl:DatatypeProperty ;
+    rdfs:label "error_rate" ;
+    skos:definition "Error rate percentage" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:error_rate" ;
+    dpag:sql_identifier "dpag_error_rate_percentage" .
+
+dpag:failover_mechanism a owl:DatatypeProperty ;
+    rdfs:label "failover_mechanism" ;
+    skos:definition "How failover to this redundancy is triggered" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:failover_mechanism" ;
+    dpag:sql_identifier "dpag_failover_mechanism" .
+
+dpag:format_conversion_service a owl:DatatypeProperty ;
+    rdfs:label "format_conversion_service" ;
+    skos:definition "Service endpoint for format conversion" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:format_conversion_service" ;
+    dpag:sql_identifier "dpag_format_conversion_service" .
+
+dpag:format_delivery a owl:ObjectProperty ;
+    rdfs:label "format_delivery" ;
+    skos:definition "Format negotiation and delivery configuration" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:format_delivery" ;
+    dpag:sql_identifier "dpag_format_delivery" .
+
+dpag:format_negotiation a owl:ObjectProperty ;
+    rdfs:label "format_negotiation" ;
+    skos:definition "Content negotiation method used" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:format_negotiation" ;
+    dpag:sql_identifier "dpag_format_negotiation" .
+
+dpag:guaranteed_availability_period a owl:DatatypeProperty ;
+    rdfs:label "guaranteed_availability_period" ;
+    skos:definition "Period during which availability is guaranteed in days" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:guaranteed_availability_period" ;
+    dpag:sql_identifier "dpag_guaranteed_availability_days" .
+
+dpag:integrity_verification a owl:DatatypeProperty ;
+    rdfs:label "integrity_verification" ;
+    skos:definition "Method for verifying data integrity" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "sec:digestAlgorithm" ;
+    dpag:sql_identifier "dpag_security_integrity_method" .
+
+dpag:interoperability_configuration a owl:ObjectProperty ;
+    rdfs:label "interoperability_configuration" ;
+    skos:definition "Configuration for cross-system data exchange and protocol support" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:interoperability_configuration" ;
+    dpag:sql_identifier "dpag_interoperability_config" .
+
+dpag:last_sync_timestamp a owl:DatatypeProperty ;
+    rdfs:label "last_sync_timestamp" ;
+    skos:definition "Timestamp of last successful synchronization" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "prov:endedAtTime" ;
+    dpag:sql_identifier "dpag_last_sync_timestamp" .
+
+dpag:latency_p99 a owl:DatatypeProperty ;
+    rdfs:label "latency_p99" ;
+    skos:definition "99th percentile latency in milliseconds" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:latency_p99" ;
+    dpag:sql_identifier "dpag_latency_p99_ms" .
+
+dpag:legal_hold_check a owl:DatatypeProperty ;
+    rdfs:label "legal_hold_check" ;
+    skos:definition "Whether to check for legal holds before disposal" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: must verify no legal holds exist before data disposal" ;
+    dpag:owl.filler "dpag:legal_hold_check" ;
+    dpag:references "GDPR Article 17(3)(e) - exceptions to erasure for legal claims" ;
+    dpag:sql_identifier "dpag_legal_hold_check" .
+
+dpag:limit_scope a owl:DatatypeProperty ;
+    rdfs:label "limit_scope" ;
+    skos:definition "Scope of the limit (per user, per API key, global)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:limit_scope" ;
+    dpag:sql_identifier "dpag_limit_scope" .
+
+dpag:limit_type a owl:ObjectProperty ;
+    rdfs:label "limit_type" ;
+    skos:definition "Type of rate limit (per minute, per hour, per day)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:limit_type" ;
+    dpag:sql_identifier "dpag_rate_limit_type" .
+
+dpag:location_type a owl:ObjectProperty ;
+    rdfs:label "location_type" ;
+    skos:definition "Type of location (physical, digital, hybrid)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:type" ;
+    dpag:sql_identifier "dpag_location_type" .
+
+dpag:log_failed_attempts a owl:DatatypeProperty ;
+    rdfs:label "log_failed_attempts" ;
+    skos:definition "Whether to log failed access attempts" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:log_failed_attempts" ;
+    dpag:sql_identifier "dpag_log_failed_attempts" .
+
+dpag:log_permission_checks a owl:DatatypeProperty ;
+    rdfs:label "log_permission_checks" ;
+    skos:definition "Whether to log permission check events" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:log_permission_checks" ;
+    dpag:sql_identifier "dpag_log_permission_checks" .
+
+dpag:log_retention_days a owl:DatatypeProperty ;
+    rdfs:label "log_retention_days" ;
+    skos:definition "Number of days to retain access logs" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:log_retention_days" ;
+    dpag:sql_identifier "dpag_log_retention_days" .
+
+dpag:log_storage_location a owl:DatatypeProperty ;
+    rdfs:label "log_storage_location" ;
+    skos:definition "Where access logs are stored" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "prov:atLocation" ;
+    dpag:sql_identifier "dpag_log_storage_location" .
+
+dpag:maximum_retention_period a owl:DatatypeProperty ;
+    rdfs:label "maximum_retention_period" ;
+    skos:definition "Maximum allowed retention period in days (0 for indefinite)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:maximum_retention_period" ;
+    dpag:sql_identifier "dpag_max_retention_days" .
+
+dpag:minimum_retention_period a owl:DatatypeProperty ;
+    rdfs:label "minimum_retention_period" ;
+    skos:definition "Minimum required retention period in days" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: must comply with sector-specific retention requirements" ;
+    dpag:owl.filler "dpag:minimum_retention_period" ;
+    dpag:references "ESPR Article 8 (product passport availability); Battery Regulation Article 77" ;
+    dpag:sql_identifier "dpag_min_retention_days" .
+
+dpag:offline_capability a owl:DatatypeProperty ;
+    rdfs:label "offline_capability" ;
+    skos:definition "Whether carrier can function when offline" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:offline_capable" ;
+    dpag:sql_identifier "dpag_offline_capable" .
+
+dpag:operational_metrics a owl:ObjectProperty ;
+    rdfs:label "operational_metrics" ;
+    skos:definition "Metrics for monitoring system operations" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:operational_metrics" ;
+    dpag:sql_identifier "dpag_operational_metrics" .
+
+dpag:performance_metrics a owl:ObjectProperty ;
+    rdfs:label "performance_metrics" ;
+    skos:definition "Performance-related metrics" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:performance_metrics" ;
+    dpag:sql_identifier "dpag_performance_metrics" .
+
+dpag:physical_location a owl:DatatypeProperty ;
+    rdfs:label "physical_location" ;
+    skos:definition "Physical address or coordinates if applicable" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "schema:address" ;
+    dpag:sql_identifier "dpag_physical_location" .
+
+dpag:protocol_support a owl:ObjectProperty ;
+    rdfs:label "protocol_support" ;
+    skos:definition "Supported communication and data transfer protocols" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:protocol_support" ;
+    dpag:sql_identifier "dpag_protocol_support" .
+
+dpag:public_access a owl:ObjectProperty ;
+    rdfs:label "public_access" ;
+    skos:definition "Configuration for publicly accessible data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "acl:Read" ;
+    dpag:sql_identifier "dpag_access_public" .
+
+dpag:public_access_url a owl:DatatypeProperty ;
+    rdfs:label "public_access_url" ;
+    skos:definition "URL endpoint for public data access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:accessURL" ;
+    dpag:sql_identifier "dpag_access_public_url" .
+
+dpag:public_data_license a owl:DatatypeProperty ;
+    rdfs:label "public_data_license" ;
+    skos:definition "License governing public data usage" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:license" ;
+    dpag:sql_identifier "dpag_access_public_license" .
+
+dpag:redundancy_level a owl:ObjectProperty ;
+    rdfs:label "redundancy_level" ;
+    skos:definition "Level or priority of this redundancy (primary, secondary, tertiary)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:redundancy_level" ;
+    dpag:sql_identifier "dpag_redundancy_level" .
+
+dpag:request_limit a owl:DatatypeProperty ;
+    rdfs:label "request_limit" ;
+    skos:definition "Maximum number of requests allowed" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:request_limit" ;
+    dpag:sql_identifier "dpag_request_limit" .
+
+dpag:restricted_access a owl:ObjectProperty ;
+    rdfs:label "restricted_access" ;
+    skos:definition "Configuration for role-based restricted access" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "odrl:Prohibition" ;
+    dpag:sql_identifier "dpag_access_restricted" .
+
+dpag:retention_justification a owl:DatatypeProperty ;
+    rdfs:label "retention_justification" ;
+    skos:definition "Legal or business justification for retention period" ;
+    skos:inScheme dpag: ;
+    dpag:comment "Mandatory: must document retention justification for compliance" ;
+    dpag:owl.filler "dpv:hasLegalBasis" ;
+    dpag:references "GDPR Article 5(1)(e) - storage limitation; Article 17 - right to erasure" ;
+    dpag:sql_identifier "dpag_retention_justification" .
+
+dpag:retention_policy a owl:ObjectProperty ;
+    rdfs:label "retention_policy" ;
+    skos:definition "Policies defining how long data must or can be retained" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:retention_policy" ;
+    dpag:sql_identifier "dpag_retention_policy" .
+
+dpag:role_description a owl:DatatypeProperty ;
+    rdfs:label "role_description" ;
+    skos:definition "Description of the role's purpose and scope" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:description" ;
+    dpag:sql_identifier "dpag_role_description" .
+
+dpag:role_name a owl:DatatypeProperty ;
+    rdfs:label "role_name" ;
+    skos:definition "Name or identifier of the role" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "foaf:name" ;
+    dpag:sql_identifier "dpag_role_name" .
+
+dpag:security_settings a owl:ObjectProperty ;
+    rdfs:label "security_settings" ;
+    skos:definition "Security configuration for data protection and transport" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "sec:SecuritySettings" ;
+    dpag:sql_identifier "dpag_security_settings" .
+
+dpag:service_level_agreement a owl:DatatypeProperty ;
+    rdfs:label "service_level_agreement" ;
+    skos:definition "Uptime percentage commitment (e.g., 99.9)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:service_level_agreement" ;
+    dpag:sql_identifier "dpag_sla_uptime_percentage" .
+
+dpag:service_metrics a owl:ObjectProperty ;
+    rdfs:label "service_metrics" ;
+    skos:definition "Service-level operational metrics" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:service_metrics" ;
+    dpag:sql_identifier "dpag_service_metrics" .
+
+dpag:sla_compliance a owl:DatatypeProperty ;
+    rdfs:label "sla_compliance" ;
+    skos:definition "SLA compliance percentage" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:sla_compliance" ;
+    dpag:sql_identifier "dpag_sla_compliance_percentage" .
+
+dpag:source_field a owl:DatatypeProperty ;
+    rdfs:label "source_field" ;
+    skos:definition "Field identifier in source system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:source_field" ;
+    dpag:sql_identifier "dpag_mapping_source_field" .
+
+dpag:source_system_identifier a owl:DatatypeProperty ;
+    rdfs:label "source_system_identifier" ;
+    skos:definition "Unique identifier for the source system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:identifier" ;
+    dpag:sql_identifier "dpag_source_system_id" .
+
+dpag:source_system_name a owl:DatatypeProperty ;
+    rdfs:label "source_system_name" ;
+    skos:definition "Human-readable name of the source system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "foaf:name" ;
+    dpag:sql_identifier "dpag_source_system_name" .
+
+dpag:source_system_type a owl:ObjectProperty ;
+    rdfs:label "source_system_type" ;
+    skos:definition "Type of source system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcterms:type" ;
+    dpag:sql_identifier "dpag_source_system_type" .
+
+dpag:standards_compliance a owl:ObjectProperty ;
+    rdfs:label "standards_compliance" ;
+    skos:definition "Industry standards and certifications" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:standards_compliance" ;
+    dpag:sql_identifier "dpag_standards_compliance" .
+
+dpag:storage_capacity a owl:DatatypeProperty ;
+    rdfs:label "storage_capacity" ;
+    skos:definition "Total storage capacity in bytes" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:storage_capacity" ;
+    dpag:sql_identifier "dpag_storage_capacity_bytes" .
+
+dpag:storage_usage a owl:DatatypeProperty ;
+    rdfs:label "storage_usage" ;
+    skos:definition "Current storage usage in bytes" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:byteSize" ;
+    dpag:sql_identifier "dpag_storage_usage_bytes" .
+
+dpag:system_integration a owl:ObjectProperty ;
+    rdfs:label "system_integration" ;
+    skos:definition "Configuration for upstream source systems and downstream consumers" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:system_integration" ;
+    dpag:sql_identifier "dpag_system_integration" .
+
+dpag:target_field a owl:DatatypeProperty ;
+    rdfs:label "target_field" ;
+    skos:definition "Field identifier in target system" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:target_field" ;
+    dpag:sql_identifier "dpag_mapping_target_field" .
+
+dpag:throughput a owl:DatatypeProperty ;
+    rdfs:label "throughput" ;
+    skos:definition "Requests processed per second" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:throughput" ;
+    dpag:sql_identifier "dpag_throughput_per_second" .
+
+dpag:token_lifetime a owl:DatatypeProperty ;
+    rdfs:label "token_lifetime" ;
+    skos:definition "Duration of authentication token validity in seconds" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:token_lifetime" ;
+    dpag:sql_identifier "dpag_access_token_lifetime" .
+
+dpag:track_access a owl:DatatypeProperty ;
+    rdfs:label "track_access" ;
+    skos:definition "Whether to track data access events" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:track_access" ;
+    dpag:sql_identifier "dpag_track_access" .
+
+dpag:track_modifications a owl:DatatypeProperty ;
+    rdfs:label "track_modifications" ;
+    skos:definition "Whether to track data modification events" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:track_modifications" ;
+    dpag:sql_identifier "dpag_track_modifications" .
+
+dpag:transformation_rule a owl:DatatypeProperty ;
+    rdfs:label "transformation_rule" ;
+    skos:definition "Transformation applied during mapping" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:transformation_rule" ;
+    dpag:sql_identifier "dpag_mapping_transformation" .
+
+dpag:transport_security a owl:ObjectProperty ;
+    rdfs:label "transport_security" ;
+    skos:definition "Transport layer security configuration" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:transport_security" ;
+    dpag:sql_identifier "dpag_security_transport" .
+
+dpag:update_endpoint a owl:DatatypeProperty ;
+    rdfs:label "update_endpoint" ;
+    skos:definition "Endpoint for pushing or pulling updates" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dcat:accessURL" ;
+    dpag:sql_identifier "dpag_update_endpoint" .
+
+dpag:update_frequency a owl:DatatypeProperty ;
+    rdfs:label "update_frequency" ;
+    skos:definition "How often updates occur in seconds (0 for real-time)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:update_frequency" ;
+    dpag:sql_identifier "dpag_update_frequency_seconds" .
+
+dpag:update_method a owl:ObjectProperty ;
+    rdfs:label "update_method" ;
+    skos:definition "Method used to update carrier data" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:update_method" ;
+    dpag:sql_identifier "dpag_update_method" .
+
+dpag:uptime_percentage a owl:DatatypeProperty ;
+    rdfs:label "uptime_percentage" ;
+    skos:definition "Service uptime percentage" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:uptime_percentage" ;
+    dpag:sql_identifier "dpag_uptime_percentage" .
+
+dpag:usage_analytics_enabled a owl:DatatypeProperty ;
+    rdfs:label "usage_analytics_enabled" ;
+    skos:definition "Whether to enable usage analytics" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:usage_analytics_enabled" ;
+    dpag:sql_identifier "dpag_usage_analytics_enabled" .
+
+dpag:usage_log_retention a owl:DatatypeProperty ;
+    rdfs:label "usage_log_retention" ;
+    skos:definition "How long to retain usage logs in days" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:usage_log_retention" ;
+    dpag:sql_identifier "dpag_usage_log_retention_days" .
+
+dpag:usage_tracking a owl:ObjectProperty ;
+    rdfs:label "usage_tracking" ;
+    skos:definition "Configuration for tracking data usage" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:usage_tracking" ;
+    dpag:sql_identifier "dpag_usage_tracking" .
+
+dpag:validation_endpoint a owl:DatatypeProperty ;
+    rdfs:label "validation_endpoint" ;
+    skos:definition "Endpoint for validating compliance" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:validation_endpoint" ;
+    dpag:sql_identifier "dpag_validation_endpoint" .
+
+dpag:window_duration a owl:DatatypeProperty ;
+    rdfs:label "window_duration" ;
+    skos:definition "Duration of maintenance window in minutes" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "schema:duration" ;
+    dpag:sql_identifier "dpag_maintenance_duration_minutes" .
+
+dpag:window_recurrence a owl:DatatypeProperty ;
+    rdfs:label "window_recurrence" ;
+    skos:definition "Recurrence pattern (e.g., weekly, monthly)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "schema:repeatFrequency" ;
+    dpag:sql_identifier "dpag_maintenance_recurrence" .
+
+dpag:window_start a owl:DatatypeProperty ;
+    rdfs:label "window_start" ;
+    skos:definition "Start time of maintenance window (ISO 8601)" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "schema:startTime" ;
+    dpag:sql_identifier "dpag_maintenance_start" .
+
+dcat:accessURL a owl:Class ;
+    rdfs:label "DIGITAL",
+        "URL" ;
+    rdfs:subClassOf <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum>,
+        <https://ce-rise-models.codeberg.page/dpp-access-and-governance/:LocationTypeEnum> ;
+    skos:definition "Digital/online location",
+        "Web URL endpoint" .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:LocationTypeEnum> a owl:Class ;
+    rdfs:label "LocationTypeEnum" ;
+    owl:unionOf ( prov:Location dcat:accessURL dpag:HybridLocation ) ;
+    skos:definition "Types of carrier locations" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dcat:accessURL,
+        prov:Location,
+        dpag:HybridLocation .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:FormatNegotiationEnum> a owl:Class ;
+    rdfs:label "FormatNegotiationEnum" ;
+    owl:unionOf ( dpag:HttpAcceptNegotiation dpag:UrlParameterNegotiation dpag:FileExtensionNegotiation dpag:ContentTypeNegotiation ) ;
+    skos:definition "Content negotiation methods" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:ContentTypeNegotiation,
+        dpag:FileExtensionNegotiation,
+        dpag:HttpAcceptNegotiation,
+        dpag:UrlParameterNegotiation .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RedundancyLevelEnum> a owl:Class ;
+    rdfs:label "RedundancyLevelEnum" ;
+    owl:unionOf ( dpag:Primary dpag:Secondary dpag:Tertiary dpag:Archive ) ;
+    skos:definition "Redundancy priority levels" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:Archive,
+        dpag:Primary,
+        dpag:Secondary,
+        dpag:Tertiary .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AvailabilityStatusEnum> a owl:Class ;
+    rdfs:label "AvailabilityStatusEnum" ;
+    owl:unionOf ( dpag:Operational dpag:Degraded dpag:PartialOutage dpag:MajorOutage dpag:Maintenance ) ;
+    skos:definition "Service availability status" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:Degraded,
+        dpag:Maintenance,
+        dpag:MajorOutage,
+        dpag:Operational,
+        dpag:PartialOutage .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CompressionMethodEnum> a owl:Class ;
+    rdfs:label "CompressionMethodEnum" ;
+    owl:unionOf ( dpag:GzipCompression dpag:BrotliCompression dpag:DeflateCompression dpag:ZipCompression dpag:NoCompression ) ;
+    skos:definition "Supported compression methods" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:BrotliCompression,
+        dpag:DeflateCompression,
+        dpag:GzipCompression,
+        dpag:NoCompression,
+        dpag:ZipCompression .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DataClassificationEnum> a owl:Class ;
+    rdfs:label "DataClassificationEnum" ;
+    owl:unionOf ( dpv:PublicData dpv:InternalData dpv:ConfidentialData dpv:SecretData dpv:PersonalData ) ;
+    skos:definition "Data security classification levels" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpv:ConfidentialData,
+        dpv:InternalData,
+        dpv:PersonalData,
+        dpv:PublicData,
+        dpv:SecretData .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:RateLimitTypeEnum> a owl:Class ;
+    rdfs:label "RateLimitTypeEnum" ;
+    owl:unionOf ( dpag:PerSecond dpag:PerMinute dpag:PerHour dpag:PerDay dpag:PerRequest ) ;
+    skos:definition "Types of rate limiting periods" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:PerDay,
+        dpag:PerHour,
+        dpag:PerMinute,
+        dpag:PerRequest,
+        dpag:PerSecond .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SubscriptionProtocolEnum> a owl:Class ;
+    rdfs:label "SubscriptionProtocolEnum" ;
+    owl:unionOf ( dpag:WebSocketSubscription dpag:ServerSentEvents dpag:Webhook dpag:MQTTSubscription dpag:AMQP ) ;
+    skos:definition "Event subscription protocols" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:AMQP,
+        dpag:MQTTSubscription,
+        dpag:ServerSentEvents,
+        dpag:WebSocketSubscription,
+        dpag:Webhook .
+
+dpag:sync_frequency a owl:DatatypeProperty ;
+    rdfs:label "sync_frequency" ;
+    skos:definition "How often data is synchronized in seconds",
+        "How often this redundancy is synchronized in seconds" ;
+    skos:inScheme dpag: ;
+    dpag:owl.filler "dpag:sync_frequency" ;
+    dpag:sql_identifier "dpag_source_sync_frequency_seconds",
+        "dpag_sync_frequency_seconds" .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:DisposalMethodEnum> a owl:Class ;
+    rdfs:label "DisposalMethodEnum" ;
+    owl:unionOf ( dpag:Deletion dpag:SecureDeletion dpv:Anonymisation dpv:Pseudonymisation dpv:DataAggregation dpag:ArchivalDisposal ) ;
+    skos:definition "Methods for data disposal" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:ArchivalDisposal,
+        dpag:Deletion,
+        dpag:SecureDeletion,
+        dpv:Anonymisation,
+        dpv:DataAggregation,
+        dpv:Pseudonymisation .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:QueryProtocolEnum> a owl:Class ;
+    rdfs:label "QueryProtocolEnum" ;
+    owl:unionOf ( dpag:REST dpag:GraphQL dpag:SPARQL dpag:SQL dpag:OData dpag:gRPC ) ;
+    skos:definition "Query and API protocols" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:GraphQL,
+        dpag:OData,
+        dpag:REST,
+        dpag:SPARQL,
+        dpag:SQL,
+        dpag:gRPC .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransportSecurityEnum> a owl:Class ;
+    rdfs:label "TransportSecurityEnum" ;
+    owl:unionOf ( sec:TLS12 sec:TLS13 sec:MutualTLS sec:HTTPS sec:VPN sec:HTTPSignature ) ;
+    skos:definition "Transport layer security protocols" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values sec:HTTPS,
+        sec:HTTPSignature,
+        sec:MutualTLS,
+        sec:TLS12,
+        sec:TLS13,
+        sec:VPN .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:UpdateMethodEnum> a owl:Class ;
+    rdfs:label "UpdateMethodEnum" ;
+    owl:unionOf ( dpag:PushUpdate dpag:PullUpdate dpag:BidirectionalUpdate dpag:StaticData dpag:EventDrivenUpdate dpag:ScheduledUpdate ) ;
+    skos:definition "Methods for updating carrier data" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:BidirectionalUpdate,
+        dpag:EventDrivenUpdate,
+        dpag:PullUpdate,
+        dpag:PushUpdate,
+        dpag:ScheduledUpdate,
+        dpag:StaticData .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ArchiveFormatEnum> a owl:Class ;
+    rdfs:label "ArchiveFormatEnum" ;
+    owl:unionOf ( dpag:ZipArchive dpag:TarGzArchive dpag:ParquetArchive dpag:JsonLdArchive dpag:TurtleArchive dpag:WarcArchive dpag:BagItArchive ) ;
+    skos:definition "Supported archive formats" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:BagItArchive,
+        dpag:JsonLdArchive,
+        dpag:ParquetArchive,
+        dpag:TarGzArchive,
+        dpag:TurtleArchive,
+        dpag:WarcArchive,
+        dpag:ZipArchive .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:EncryptionMethodEnum> a owl:Class ;
+    rdfs:label "EncryptionMethodEnum" ;
+    owl:unionOf ( sec:AES256GCM sec:AES256CBC sec:RSA2048 sec:RSA4096 sec:ChaCha20Poly1305 sec:ECDH ) ;
+    skos:definition "Supported encryption algorithms" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values sec:AES256CBC,
+        sec:AES256GCM,
+        sec:ChaCha20Poly1305,
+        sec:ECDH,
+        sec:RSA2048,
+        sec:RSA4096 .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:AuthenticationMethodEnum> a owl:Class ;
+    rdfs:label "AuthenticationMethodEnum" ;
+    owl:unionOf ( oauth:OAuth2 sec:APIKey cert:X509Certificate sec:JsonWebToken sec:BasicAuthentication sec:SAML oauth:OpenIDConnect ) ;
+    skos:definition "Supported authentication methods" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values cert:X509Certificate,
+        sec:APIKey,
+        sec:BasicAuthentication,
+        sec:JsonWebToken,
+        sec:SAML,
+        oauth:OAuth2,
+        oauth:OpenIDConnect .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:ConsumerSystemTypeEnum> a owl:Class ;
+    rdfs:label "ConsumerSystemTypeEnum" ;
+    owl:unionOf ( dpag:AnalyticsPlatform dpag:ReportingSystem dpag:VisualizationTool dpag:Marketplace dpag:RegulatorySystem dpag:PartnerSystem dpag:MobileApp dpag:WebApp ) ;
+    skos:definition "Types of consumer systems" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:AnalyticsPlatform,
+        dpag:Marketplace,
+        dpag:MobileApp,
+        dpag:PartnerSystem,
+        dpag:RegulatorySystem,
+        dpag:ReportingSystem,
+        dpag:VisualizationTool,
+        dpag:WebApp .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:SourceSystemTypeEnum> a owl:Class ;
+    rdfs:label "SourceSystemTypeEnum" ;
+    owl:unionOf ( dpag:ERPSystem dpag:MESSystem dpag:PLMSystem dpag:IoTPlatform dpag:DatabaseSource dpag:APIService dpag:FileSystemSource dpag:StreamingSource ) ;
+    skos:definition "Types of source systems" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:APIService,
+        dpag:DatabaseSource,
+        dpag:ERPSystem,
+        dpag:FileSystemSource,
+        dpag:IoTPlatform,
+        dpag:MESSystem,
+        dpag:PLMSystem,
+        dpag:StreamingSource .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:TransferProtocolEnum> a owl:Class ;
+    rdfs:label "TransferProtocolEnum" ;
+    owl:unionOf ( dpag:HTTPS dpag:HTTP2 dpag:HTTP3 dpag:MQTT dpag:CoAP dpag:FTP dpag:SFTP dpag:WebSocket ) ;
+    skos:definition "Data transfer protocols" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dpag:CoAP,
+        dpag:FTP,
+        dpag:HTTP2,
+        dpag:HTTP3,
+        dpag:HTTPS,
+        dpag:MQTT,
+        dpag:SFTP,
+        dpag:WebSocket .
+
+<https://ce-rise-models.codeberg.page/dpp-access-and-governance/:CarrierTypeEnum> a owl:Class ;
+    rdfs:label "CarrierTypeEnum" ;
+    owl:unionOf ( dpag:QRCode dpag:RFID dpag:NFC dpag:Barcode dcat:accessURL dcat:DataService dpag:Blockchain dpag:IPFS dpag:Database dpag:FileSystem dpag:CloudStorage ) ;
+    skos:definition "Types of data carriers supported" ;
+    skos:inScheme dpag: ;
+    linkml:permissible_values dcat:DataService,
+        dcat:accessURL,
+        dpag:Barcode,
+        dpag:Blockchain,
+        dpag:CloudStorage,
+        dpag:Database,
+        dpag:FileSystem,
+        dpag:IPFS,
+        dpag:NFC,
+        dpag:QRCode,
+        dpag:RFID .
+
+

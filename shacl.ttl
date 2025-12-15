@@ -1,0 +1,1081 @@
+@prefix acl: <http://www.w3.org/ns/auth/acl#> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dpag: <https://ce-rise-models.codeberg.page/dpp-access-and-governance/> .
+@prefix dpv: <https://w3id.org/dpv#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix oauth: <https://www.w3.org/ns/auth/oauth#> .
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema1: <http://schema.org/> .
+@prefix sec: <https://w3id.org/security#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xacml: <urn:oasis:names:tc:xacml:3.0:core:schema:wd-17#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dpag:DPPAccessAndGovernance a sh:NodeShape ;
+    sh:closed true ;
+    sh:description """Root class for operational and access-related metadata governing DPP records. Full implementation includes all five stages: Access Control, Data Carrier, Data Longevity, Interoperability, and System Integration mechanisms.
+""" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class dcat:Distribution ;
+            sh:description "Configuration for how and where DPP data is stored and accessed" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path dpag:hasDataCarrier ],
+        [ sh:class dpag:SystemIntegration ;
+            sh:description "Configuration for upstream source systems and downstream consumers" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path dpag:hasSystemIntegration ],
+        [ sh:class acl:AccessControl ;
+            sh:description "Access control configuration defining who can access what data under what conditions" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path dpag:hasAccessControl ],
+        [ sh:class dpag:InteroperabilityConfiguration ;
+            sh:description "Configuration for cross-system data exchange and protocol support" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path dpag:hasInteroperabilityConfiguration ],
+        [ sh:class dpag:DataLongevity ;
+            sh:description "Lifecycle policies for data retention, availability, archival, and disposal" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path dpag:hasDataLongevity ] ;
+    sh:targetClass dpag:DPPAccessAndGovernance .
+
+dcterms:Standard a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Industry standards and certification compliance" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "List of standards complied with (ISO, W3C, GS1, etc.)" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dcterms:conformsTo ],
+        [ sh:datatype xsd:string ;
+            sh:description "URLs or identifiers for conformance certificates" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:hasCertificate ],
+        [ sh:datatype xsd:anyURI ;
+            sh:description "Endpoint for validating compliance" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpag:validationService ],
+        [ sh:datatype xsd:string ;
+            sh:description "Level of compliance achieved" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:complianceLevel ] ;
+    sh:targetClass dcterms:Standard .
+
+acl:AccessControl a sh:NodeShape ;
+    sh:closed true ;
+    sh:description """Comprehensive access control configuration including access levels, security settings, and consent management for DPP data
+""" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class sec:SecurityConfiguration ;
+            sh:description "Security configuration for data protection and transport" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path sec:SecuritySettings ],
+        [ sh:class dpv:Consent ;
+            sh:description "GDPR-compliant consent handling configuration" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path dpv:hasConsent ],
+        [ sh:class odrl:Permission ;
+            sh:description "Multi-tier access model defining public, authenticated, and restricted access" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path acl:accessTo ] ;
+    sh:targetClass acl:AccessControl .
+
+dcat:Distribution a sh:NodeShape ;
+    sh:closed true ;
+    sh:description """Configuration specifying how and where DPP data is physically or digitally stored, including carrier types, capacity, location, redundancy, and update mechanisms
+""" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class prov:Location ;
+            sh:description "Physical or digital location of the carrier" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path prov:atLocation ],
+        [ sh:class dpag:CarrierRedundancy ;
+            sh:description "Backup and failover carrier configurations" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path dpag:hasRedundancy ],
+        [ sh:class dpag:UpdateMechanism ;
+            sh:description "How carrier data is refreshed and synchronized" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path dpag:hasUpdateMechanism ],
+        [ sh:description "Type of physical or digital storage mechanism (QR code, RFID, NFC, URL, API, blockchain, etc.)" ;
+            sh:in ( dpag:QRCode dpag:RFID dpag:NFC dpag:Barcode dcat:accessURL dcat:DataService dpag:Blockchain dpag:IPFS dpag:Database dpag:FileSystem dpag:CloudStorage ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path dcat:mediaType ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Data size limits in bytes for the carrier" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dcat:byteSize ] ;
+    sh:targetClass dcat:Distribution .
+
+odrl:Permission a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Three-tier access model for granular data access control" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class acl:AuthenticatedAgent ;
+            sh:description "Configuration for authenticated user access" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path acl:AuthenticatedAgent ],
+        [ sh:class acl:Read ;
+            sh:description "Configuration for publicly accessible data" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path acl:Read ],
+        [ sh:class odrl:Prohibition ;
+            sh:description "Configuration for role-based restricted access" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path odrl:Prohibition ] ;
+    sh:targetClass odrl:Permission .
+
+dpag:ArchivalStrategy a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Long-term data preservation and archival configuration" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Encryption method for archived data" ;
+            sh:in ( sec:AES256GCM sec:AES256CBC sec:RSA2048 sec:RSA4096 sec:ChaCha20Poly1305 sec:ECDH ) ;
+            sh:maxCount 1 ;
+            sh:order 3 ;
+            sh:path sec:encryptionAlgorithm ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Expected time to retrieve from archive in hours" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 5 ;
+            sh:path dpag:retrievalTime ],
+        [ sh:datatype xsd:string ;
+            sh:description "Process for accessing archived data" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dcat:accessService ],
+        [ sh:datatype xsd:string ;
+            sh:description "Method for verifying archive integrity" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path sec:digestAlgorithm ],
+        [ sh:description "Format for archived data" ;
+            sh:in ( dpag:ZipArchive dpag:TarGzArchive dpag:ParquetArchive dpag:JsonLdArchive dpag:TurtleArchive dpag:WarcArchive dpag:BagItArchive ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path dcterms:format ],
+        [ sh:datatype xsd:string ;
+            sh:description "Where archives are stored" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path prov:atLocation ] ;
+    sh:targetClass dpag:ArchivalStrategy .
+
+dpag:AvailabilityCommitment a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Service level agreements and availability guarantees" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Geographic or logical zones where data is available" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path prov:atLocation ],
+        [ sh:class dpag:MaintenanceWindow ;
+            sh:description "Scheduled maintenance periods" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path dpag:hasMaintenanceWindow ],
+        [ sh:datatype xsd:float ;
+            sh:description "Uptime percentage commitment (e.g., 99.9)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:slaUptime ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Maximum recovery time objective in hours" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path dpag:recoveryTimeObjective ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Period during which availability is guaranteed in days" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dpag:guaranteedPeriod ] ;
+    sh:targetClass dpag:AvailabilityCommitment .
+
+dpag:CapacityMetrics a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Capacity and resource usage metrics" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:float ;
+            sh:description "CPU utilization percentage" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:cpuUtilization ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Total storage capacity in bytes" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:storageCapacity ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Current storage usage in bytes" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dcat:byteSize ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Current bandwidth usage in bytes per second" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpag:bandwidthUsage ] ;
+    sh:targetClass dpag:CapacityMetrics .
+
+dpag:CarrierRedundancy a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Backup and redundancy configuration for data carriers" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Type of carrier used for backup" ;
+            sh:in ( dpag:QRCode dpag:RFID dpag:NFC dpag:Barcode dcat:accessURL dcat:DataService dpag:Blockchain dpag:IPFS dpag:Database dpag:FileSystem dpag:CloudStorage ) ;
+            sh:maxCount 1 ;
+            sh:order 1 ;
+            sh:path dcat:mediaType ],
+        [ sh:datatype xsd:string ;
+            sh:description "How failover to this redundancy is triggered" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:failoverMechanism ],
+        [ sh:description "Level or priority of this redundancy (primary, secondary, tertiary)" ;
+            sh:in ( dpag:Primary dpag:Secondary dpag:Tertiary dpag:Archive ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path dpag:redundancyLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:description "How often this redundancy is synchronized in seconds" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path dpag:syncFrequency ],
+        [ sh:class prov:Location ;
+            sh:description "Location of the backup carrier" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path prov:atLocation ] ;
+    sh:targetClass dpag:CarrierRedundancy .
+
+dpag:DataLongevity a sh:NodeShape ;
+    sh:closed true ;
+    sh:description """Lifecycle policies and strategies for data retention, availability commitments, archival processes, and disposal policies throughout the DPP data lifecycle
+""" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class dpag:DisposalPolicy ;
+            sh:description "Policies for when and how to dispose of data" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path dpag:hasDisposalPolicy ],
+        [ sh:class dpag:ArchivalStrategy ;
+            sh:description "Long-term preservation and archival approach" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path dpag:hasArchivalStrategy ],
+        [ sh:class dpag:RetentionPolicy ;
+            sh:description "Policies defining how long data must or can be retained" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path dpag:hasRetentionPolicy ],
+        [ sh:class dpag:AvailabilityCommitment ;
+            sh:description "Service level agreements and uptime guarantees" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path dpag:hasAvailabilityCommitment ] ;
+    sh:targetClass dpag:DataLongevity .
+
+dpag:DataMapping a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Mapping between source and target data fields" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Field identifier in source system" ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dpag:sourceField ],
+        [ sh:datatype xsd:string ;
+            sh:description "Transformation applied during mapping" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpag:transformationRule ],
+        [ sh:datatype xsd:string ;
+            sh:description "Field identifier in target system" ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:targetField ] ;
+    sh:targetClass dpag:DataMapping .
+
+dpag:DisposalPolicy a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Policies governing when and how data should be disposed" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Conditions triggering data disposal" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dpag:disposalCriteria ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether to check for legal holds before disposal" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path dpv:hasLegalBasis ],
+        [ sh:description "Method for data disposal" ;
+            sh:in ( dpag:Deletion dpag:SecureDeletion dpv:Anonymisation dpv:Pseudonymisation dpv:DataAggregation dpag:ArchivalDisposal ) ;
+            sh:maxCount 1 ;
+            sh:order 1 ;
+            sh:path dpag:disposalMethod ],
+        [ sh:datatype xsd:string ;
+            sh:description "Method for verifying successful disposal" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:disposalVerification ],
+        [ sh:datatype xsd:string ;
+            sh:description "Who to notify about disposal" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path prov:wasInformedBy ] ;
+    sh:targetClass dpag:DisposalPolicy .
+
+dpag:FormatDelivery a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Configuration for format negotiation and content delivery" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Available compression methods" ;
+            sh:in ( dpag:GzipCompression dpag:BrotliCompression dpag:DeflateCompression dpag:ZipCompression dpag:NoCompression ) ;
+            sh:order 3 ;
+            sh:path dpag:compressionMethod ],
+        [ sh:datatype xsd:string ;
+            sh:description "Default format when none specified" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path dcterms:format ],
+        [ sh:datatype xsd:anyURI ;
+            sh:description "Service endpoint for format conversion" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dcat:accessService ],
+        [ sh:description "Content negotiation method used" ;
+            sh:in ( dpag:HttpAcceptNegotiation dpag:UrlParameterNegotiation dpag:FileExtensionNegotiation dpag:ContentTypeNegotiation ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path dpag:negotiationMethod ],
+        [ sh:datatype xsd:string ;
+            sh:description "List of supported output formats" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dcterms:format ] ;
+    sh:targetClass dpag:FormatDelivery .
+
+dpag:InteroperabilityConfiguration a sh:NodeShape ;
+    sh:closed true ;
+    sh:description """Configuration for enabling cross-system data exchange through APIs, format negotiation, protocol support, and standards compliance
+""" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class dpag:FormatDelivery ;
+            sh:description "Format negotiation and delivery configuration" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path dpag:hasFormatDelivery ],
+        [ sh:class dpag:ProtocolSupport ;
+            sh:description "Supported communication and data transfer protocols" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path dpag:hasProtocolSupport ],
+        [ sh:class dcterms:Standard ;
+            sh:description "Industry standards and certifications" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path dcterms:conformsTo ],
+        [ sh:class dcat:DataService ;
+            sh:description "RESTful or other API definitions and configurations" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path dcat:DataService ] ;
+    sh:targetClass dpag:InteroperabilityConfiguration .
+
+dpag:MaintenanceWindow a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Scheduled maintenance period configuration" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Recurrence pattern (e.g., weekly, monthly)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path schema1:repeatFrequency ],
+        [ sh:datatype xsd:dateTime ;
+            sh:description "Start time of maintenance window (ISO 8601)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path schema1:startTime ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Advance notice period for maintenance in hours" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:advanceNotice ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Duration of maintenance window in minutes" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path schema1:duration ] ;
+    sh:targetClass dpag:MaintenanceWindow .
+
+dpag:OperationalMetrics a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Metrics for monitoring system operations and performance" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class dpag:PerformanceMetrics ;
+            sh:description "Performance-related metrics" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path dpag:hasPerformanceMetrics ],
+        [ sh:class dpag:ServiceMetrics ;
+            sh:description "Service-level operational metrics" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path dpag:hasServiceMetrics ],
+        [ sh:class dpag:CapacityMetrics ;
+            sh:description "Capacity and resource usage metrics" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path dpag:hasCapacityMetrics ] ;
+    sh:targetClass dpag:OperationalMetrics .
+
+dpag:PerformanceMetrics a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Performance-related operational metrics" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:integer ;
+            sh:description "Maximum concurrent connections supported" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:concurrentConnections ],
+        [ sh:datatype xsd:float ;
+            sh:description "Requests processed per second" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:throughput ],
+        [ sh:datatype xsd:float ;
+            sh:description "99th percentile latency in milliseconds" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpag:latencyP99 ],
+        [ sh:datatype xsd:float ;
+            sh:description "Average response time in milliseconds" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dpag:responseTime ] ;
+    sh:targetClass dpag:PerformanceMetrics .
+
+dpag:ProtocolSupport a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Supported communication and data transfer protocols" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Supported data transfer protocols (HTTPS, MQTT, CoAP, etc.)" ;
+            sh:in ( dpag:HTTPS dpag:HTTP2 dpag:HTTP3 dpag:MQTT dpag:CoAP dpag:FTP dpag:SFTP dpag:WebSocket ) ;
+            sh:order 0 ;
+            sh:path dpag:transferProtocol ],
+        [ sh:description "Supported query protocols (REST, GraphQL, SPARQL)" ;
+            sh:in ( dpag:REST dpag:GraphQL dpag:SPARQL dpag:SQL dpag:OData dpag:gRPC ) ;
+            sh:order 1 ;
+            sh:path dpag:queryProtocol ],
+        [ sh:datatype xsd:string ;
+            sh:description "Specific protocol versions supported" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:protocolVersion ],
+        [ sh:description "Supported subscription protocols (WebSocket, SSE)" ;
+            sh:in ( dpag:WebSocketSubscription dpag:ServerSentEvents dpag:Webhook dpag:MQTTSubscription dpag:AMQP ) ;
+            sh:order 2 ;
+            sh:path dpag:subscriptionProtocol ] ;
+    sh:targetClass dpag:ProtocolSupport .
+
+dpag:RateLimit a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Rate limiting configuration for API access" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Type of rate limit (per minute, per hour, per day)" ;
+            sh:in ( dpag:PerSecond dpag:PerMinute dpag:PerHour dpag:PerDay dpag:PerRequest ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path dpag:limitType ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Maximum number of requests allowed" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:requestLimit ],
+        [ sh:datatype xsd:string ;
+            sh:description "Scope of the limit (per user, per API key, global)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpag:limitScope ] ;
+    sh:targetClass dpag:RateLimit .
+
+dpag:RetentionPolicy a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Data retention requirements and justifications" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Categories of data covered by this retention policy" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path dpv:hasDataCategory ],
+        [ sh:datatype xsd:string ;
+            sh:description "Specific regulations requiring this retention" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpv:hasApplicableLaw ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Minimum required retention period in days" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dcterms:extent ],
+        [ sh:datatype xsd:string ;
+            sh:description "Legal or business justification for retention period" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpv:hasLegalBasis ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Maximum allowed retention period in days (0 for indefinite)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dcterms:extent ] ;
+    sh:targetClass dpag:RetentionPolicy .
+
+dpag:ServiceMetrics a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Service-level operational metrics" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Current availability status" ;
+            sh:in ( dpag:Operational dpag:Degraded dpag:PartialOutage dpag:MajorOutage dpag:Maintenance ) ;
+            sh:maxCount 1 ;
+            sh:order 3 ;
+            sh:path dpag:availabilityStatus ],
+        [ sh:datatype xsd:float ;
+            sh:description "Service uptime percentage" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dpag:uptime ],
+        [ sh:datatype xsd:float ;
+            sh:description "Error rate percentage" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:errorRate ],
+        [ sh:datatype xsd:float ;
+            sh:description "SLA compliance percentage" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpag:slaCompliance ] ;
+    sh:targetClass dpag:ServiceMetrics .
+
+dpag:SystemIntegration a sh:NodeShape ;
+    sh:closed true ;
+    sh:description """Configuration for connecting with upstream data sources and downstream consumer systems, including synchronization, usage tracking, and operational monitoring
+""" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class prov:Agent ;
+            sh:description "Configuration for downstream systems consuming data" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 1 ;
+            sh:path prov:wasUsedBy ],
+        [ sh:class dpag:OperationalMetrics ;
+            sh:description "Metrics for monitoring system operations" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 2 ;
+            sh:path dpag:hasOperationalMetrics ],
+        [ sh:class prov:Agent ;
+            sh:description "Configuration for upstream systems providing data" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path prov:wasGeneratedBy ] ;
+    sh:targetClass dpag:SystemIntegration .
+
+dpag:UpdateMechanism a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Configuration for how carrier data is updated and maintained" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Method used to update carrier data" ;
+            sh:in ( dpag:PushUpdate dpag:PullUpdate dpag:BidirectionalUpdate dpag:StaticData dpag:EventDrivenUpdate dpag:ScheduledUpdate ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path dpag:updateMethod ],
+        [ sh:datatype xsd:integer ;
+            sh:description "How often updates occur in seconds (0 for real-time)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpag:updateFrequency ],
+        [ sh:datatype xsd:integer ;
+            sh:description "How long cached data remains valid in seconds" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path dpag:cacheDuration ],
+        [ sh:datatype xsd:anyURI ;
+            sh:description "Endpoint for pushing or pulling updates" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dcat:accessURL ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether carrier can function when offline" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:offlineCapable ] ;
+    sh:targetClass dpag:UpdateMechanism .
+
+dpv:Consent a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "GDPR-compliant consent handling and management" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Level of granularity for consent (field-level, record-level, etc.)" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path dpv:hasDataSubjectCategory ],
+        [ sh:datatype xsd:string ;
+            sh:description "Scope and purpose of the consent" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dpv:hasPurpose ],
+        [ sh:datatype xsd:string ;
+            sh:description "Method or endpoint for revoking consent" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dpv:hasWithdrawalMethod ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether consent is required for data access" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dpv:hasLegalBasis ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Duration of consent validity in days" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpv:hasDuration ] ;
+    sh:targetClass dpv:Consent .
+
+sec:SecurityConfiguration a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Security configuration for data protection in transit and at rest" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Transport layer security configuration" ;
+            sh:in ( sec:TLS12 sec:TLS13 sec:MutualTLS sec:HTTPS sec:VPN sec:HTTPSignature ) ;
+            sh:maxCount 1 ;
+            sh:order 2 ;
+            sh:path sec:transportSecurity ],
+        [ sh:description "Security classification level of the data" ;
+            sh:in ( dpv:PublicData dpv:InternalData dpv:ConfidentialData dpv:SecretData dpv:PersonalData ) ;
+            sh:maxCount 1 ;
+            sh:order 1 ;
+            sh:path dpv:hasDataCategory ],
+        [ sh:description "Encryption method for data in transit" ;
+            sh:in ( sec:AES256GCM sec:AES256CBC sec:RSA2048 sec:RSA4096 sec:ChaCha20Poly1305 sec:ECDH ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path sec:encryptionAlgorithm ],
+        [ sh:datatype xsd:string ;
+            sh:description "Method for verifying data integrity" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 4 ;
+            sh:path sec:digestAlgorithm ],
+        [ sh:class prov:Activity ;
+            sh:description "Configuration for logging access attempts" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path prov:wasGeneratedBy ] ;
+    sh:targetClass sec:SecurityConfiguration .
+
+acl:AuthenticatedAgent a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Configuration for data requiring authentication" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:description "URL endpoint for authentication services" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path oauth:authorizationEndpoint ],
+        [ sh:datatype xsd:string ;
+            sh:description "List of field identifiers accessible after authentication" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path acl:accessToClass ],
+        [ sh:description "Method used for authentication (OAuth2, API key, certificate, etc.)" ;
+            sh:in ( oauth:OAuth2 sec:APIKey cert:X509Certificate sec:JsonWebToken sec:BasicAuthentication sec:SAML oauth:OpenIDConnect ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path oauth:authenticationMethod ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Duration of authentication token validity in seconds" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path sec:tokenLifetime ] ;
+    sh:targetClass acl:AuthenticatedAgent .
+
+acl:Read a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Configuration for data that can be accessed without authentication" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "List of field identifiers that are openly accessible" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dcat:accessURL ],
+        [ sh:datatype xsd:string ;
+            sh:description "License governing public data usage" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dcterms:license ],
+        [ sh:datatype xsd:anyURI ;
+            sh:description "URL endpoint for public data access" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dcat:accessURL ] ;
+    sh:targetClass acl:Read .
+
+odrl:Prohibition a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Configuration for role-based and specially restricted data access" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:class xacml:Role ;
+            sh:description "Map of roles to their permitted field access" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 0 ;
+            sh:path xacml:Role ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether access requests require justification" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpv:hasJustification ],
+        [ sh:datatype xsd:string ;
+            sh:description "URL or description of process to request access" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path schema1:HowToSection ],
+        [ sh:datatype xsd:string ;
+            sh:description "List of field identifiers under restricted access" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path odrl:prohibit ] ;
+    sh:targetClass odrl:Prohibition .
+
+prov:Activity a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Configuration for logging access attempts and security events",
+        "Configuration for tracking how data is used" ;
+    sh:ignoredProperties ( rdf:type ),
+        ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:boolean ;
+            sh:description "Whether to track data access events" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path prov:wasAssociatedWith ],
+        [ sh:datatype xsd:integer ;
+            sh:description "Number of days to retain access logs" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path prov:generatedAtTime ],
+        [ sh:datatype xsd:integer ;
+            sh:description "How long to retain usage logs in days" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path prov:generatedAtTime ],
+        [ sh:datatype xsd:string ;
+            sh:description "Where access logs are stored" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path prov:atLocation ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether to enable usage analytics" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:analyticsEnabled ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether to log failed access attempts" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path prov:wasInvalidatedBy ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether to log permission check events" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path prov:hadActivity ],
+        [ sh:datatype xsd:boolean ;
+            sh:description "Whether to track data modification events" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path prov:wasRevisionOf ] ;
+    sh:targetClass prov:Activity .
+
+prov:Agent a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Configuration for a downstream system consuming data",
+        "Configuration for an upstream system providing data" ;
+    sh:ignoredProperties ( rdf:type ),
+        ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:description "Endpoint for connecting to source system" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 5 ;
+            sh:path dcat:endpointURL ],
+        [ sh:description "Type of consumer system" ;
+            sh:in ( dpag:AnalyticsPlatform dpag:ReportingSystem dpag:VisualizationTool dpag:Marketplace dpag:RegulatorySystem dpag:PartnerSystem dpag:MobileApp dpag:WebApp ) ;
+            sh:maxCount 1 ;
+            sh:order 2 ;
+            sh:path dcterms:type ],
+        [ sh:datatype xsd:integer ;
+            sh:description "How often data is synchronized in seconds" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path dpag:syncFrequency ],
+        [ sh:datatype xsd:string ;
+            sh:description "Data scopes this consumer is authorized to access" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 5 ;
+            sh:path odrl:permission ],
+        [ sh:class prov:Activity ;
+            sh:description "Configuration for tracking data usage" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path dpag:hasUsageTracking ],
+        [ sh:description "Type of source system" ;
+            sh:in ( dpag:ERPSystem dpag:MESSystem dpag:PLMSystem dpag:IoTPlatform dpag:DatabaseSource dpag:APIService dpag:FileSystemSource dpag:StreamingSource ) ;
+            sh:maxCount 1 ;
+            sh:order 2 ;
+            sh:path dcterms:type ],
+        [ sh:datatype xsd:string ;
+            sh:description "Restrictions on how consumer can use data" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path odrl:prohibition ],
+        [ sh:class dpag:DataMapping ;
+            sh:description "Mappings between source and target data fields" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 4 ;
+            sh:path dpag:hasDataMapping ],
+        [ sh:datatype xsd:string ;
+            sh:description "Unique identifier for the source system" ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dcterms:identifier ],
+        [ sh:datatype xsd:string ;
+            sh:description "Human-readable name of the source system" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path foaf:name ],
+        [ sh:datatype xsd:string ;
+            sh:description "Human-readable name of the consumer system" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path foaf:name ],
+        [ sh:datatype xsd:string ;
+            sh:description "Unique identifier for the consumer system" ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dcterms:identifier ],
+        [ sh:datatype xsd:dateTime ;
+            sh:description "Timestamp of last successful synchronization" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 6 ;
+            sh:path prov:endedAtTime ] ;
+    sh:targetClass prov:Agent .
+
+xacml:Role a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Mapping of a role to its permitted data access" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:description "Fields this role can access" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path acl:accessToClass ],
+        [ sh:datatype xsd:string ;
+            sh:description "Name or identifier of the role" ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path foaf:name ],
+        [ sh:datatype xsd:string ;
+            sh:description "Description of the role's purpose and scope" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dcterms:description ] ;
+    sh:targetClass xacml:Role .
+
+prov:Location a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "Physical or digital location details for the data carrier" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:description "Type of location (physical, digital, hybrid)" ;
+            sh:in ( prov:Location dcat:accessURL dpag:HybridLocation ) ;
+            sh:maxCount 1 ;
+            sh:order 0 ;
+            sh:path dcterms:type ],
+        [ sh:datatype xsd:string ;
+            sh:description "Instructions for accessing the carrier at this location" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 3 ;
+            sh:path schema1:instructions ],
+        [ sh:datatype xsd:string ;
+            sh:description "Physical address or coordinates if applicable" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path schema1:address ],
+        [ sh:datatype xsd:anyURI ;
+            sh:description "URL, URI, or digital endpoint" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dcat:accessURL ] ;
+    sh:targetClass prov:Location .
+
+dcat:DataService a sh:NodeShape ;
+    sh:closed true ;
+    sh:description "API endpoint definitions and configuration" ;
+    sh:ignoredProperties ( rdf:type ) ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:description "URL to API documentation" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 2 ;
+            sh:path dcat:landingPage ],
+        [ sh:class dpag:RateLimit ;
+            sh:description "API rate limiting configuration" ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:order 3 ;
+            sh:path dpag:hasRateLimit ],
+        [ sh:description "Required authentication for API access" ;
+            sh:in ( oauth:OAuth2 sec:APIKey cert:X509Certificate sec:JsonWebToken sec:BasicAuthentication sec:SAML oauth:OpenIDConnect ) ;
+            sh:maxCount 1 ;
+            sh:order 4 ;
+            sh:path sec:authenticationMethod ],
+        [ sh:datatype xsd:string ;
+            sh:description "List of available API endpoints" ;
+            sh:nodeKind sh:Literal ;
+            sh:order 0 ;
+            sh:path dcat:endpointURL ],
+        [ sh:datatype xsd:string ;
+            sh:description "API version identifier" ;
+            sh:maxCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:order 1 ;
+            sh:path dcat:version ] ;
+    sh:targetClass dcat:DataService .
+
+
