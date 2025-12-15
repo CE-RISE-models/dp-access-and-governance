@@ -90,6 +90,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_access_levels
                     owl.filler: acl:accessTo
+                    comment: "Mandatory: compliance with GDPR Article 6/9 for lawful basis of data processing"
+                    references: "GDPR Articles 6, 9, 12-22 (data subject rights); ISO/IEC 27001 (access control)"
             security_settings:
                 description: Security configuration for data protection and transport
                 range: SecuritySettings
@@ -104,6 +106,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_consent_management
                     owl.filler: dpv:hasConsent
+                    comment: "Mandatory: GDPR Article 7 requirements for valid consent"
+                    references: "GDPR Article 7 (conditions for consent); Article 13/14 (information requirements); ePrivacy Directive"
 
     AccessLevels:
         description: Three-tier access model for granular data access control
@@ -169,6 +173,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_access_auth_method
                     owl.filler: dpag:authentication_method
+                    comment: "Mandatory: strong authentication required for restricted data access"
+                    references: "eIDAS Regulation (EU) 910/2014; ISO/IEC 27001 A.9.2 (user access management)"
             authenticated_fields:
                 description: List of field identifiers accessible after authentication
                 multivalued: true
@@ -266,6 +272,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_security_encryption_method
                     owl.filler: sec:encryptionAlgorithm
+                    comment: "Mandatory: encryption required for personal and confidential data"
+                    references: "GDPR Article 32(1)(a); ETSI EN 303 645 (cyber security for consumer IoT)"
             data_classification:
                 description: Security classification level of the data
                 range: DataClassificationEnum
@@ -273,6 +281,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_security_data_classification
                     owl.filler: dpv:hasDataCategory
+                    comment: "Mandatory: classification required for compliance with data protection regulations"
+                    references: "ISO/IEC 27001:2022; GDPR Article 32 (security of processing)"
             transport_security:
                 description: Transport layer security configuration
                 range: TransportSecurityEnum
@@ -339,6 +349,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_consent_required
                     owl.filler: dpv:hasLegalBasis
+                    comment: "Mandatory: must identify legal basis under GDPR Article 6"
+                    references: "GDPR Article 6 (lawfulness of processing); Article 9 (special categories)"
             consent_scope:
                 description: Scope and purpose of the consent
                 multivalued: true
@@ -384,6 +396,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_carrier_type
                     owl.filler: dcat:mediaType
+                    comment: "Mandatory: carrier type must be specified for ESPR compliance"
+                    references: "ESPR Annex III - unique product identifier requirements; ISO/IEC 18000 (RFID standards)"
             carrier_capacity:
                 description: Data size limits in bytes for the carrier
                 range: integer
@@ -575,6 +589,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_min_retention_days
                     owl.filler: dpag:minimum_retention_period
+                    comment: "Mandatory: must comply with sector-specific retention requirements"
+                    references: "ESPR Article 8 (product passport availability); Battery Regulation Article 77"
             maximum_retention_period:
                 description: Maximum allowed retention period in days (0 for indefinite)
                 range: integer
@@ -589,6 +605,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_retention_justification
                     owl.filler: dpv:hasLegalBasis
+                    comment: "Mandatory: must document retention justification for compliance"
+                    references: "GDPR Article 5(1)(e) - storage limitation; Article 17 - right to erasure"
             regulatory_requirement:
                 description: Specific regulations requiring this retention
                 multivalued: true
@@ -597,6 +615,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_regulatory_requirement
                     owl.filler: dpv:hasApplicableLaw
+                    comment: "Parameter representation: e.g., GDPR, ESPR, EU Battery Regulation, national laws"
+                    references: "ESPR (Ecodesign for Sustainable Products Regulation); EU Battery Regulation 2023/1542"
             data_categories:
                 description: Categories of data covered by this retention policy
                 multivalued: true
@@ -713,6 +733,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_archive_encryption
                     owl.filler: sec:encryptionAlgorithm
+                    comment: "Mandatory: encryption required for data protection compliance"
+                    references: "GDPR Article 32(1)(a) - pseudonymisation and encryption; ISO/IEC 27001"
             archive_integrity_check:
                 description: Method for verifying archive integrity
                 range: string
@@ -769,6 +791,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_legal_hold_check
                     owl.filler: dpag:legal_hold_check
+                    comment: "Mandatory: must verify no legal holds exist before data disposal"
+                    references: "GDPR Article 17(3)(e) - exceptions to erasure for legal claims"
 
     # Stage 4: Interoperability Configuration Classes
 
@@ -848,6 +872,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_api_authentication
                     owl.filler: dpag:api_authentication
+                    comment: "Mandatory: API authentication required for data security"
+                    references: "ISO/IEC 27001 A.14.1.2 (securing application services); OAuth 2.0 (RFC 6749)"
 
     RateLimit:
         description: Rate limiting configuration for API access
@@ -966,6 +992,8 @@ classes:
                 annotations:
                     sql_identifier: dpag_compliance_standards
                     owl.filler: dcterms:conformsTo
+                    comment: "Parameter representation: ISO/IEC 27001, ISO/IEC 27701, SOC2, ETSI standards"
+                    references: "ISO/IEC 27001 (ISMS); ISO/IEC 27701 (PIMS); ETSI EN 303 645 (IoT security)"
             conformance_certificates:
                 description: URLs or identifiers for conformance certificates
                 multivalued: true
