@@ -1,14 +1,14 @@
-# CE-RISE DPP Access and Governance
+# CE-RISE DP Access and Governance
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17899269.svg)](https://doi.org/10.5281/zenodo.17899269) [![Schemas](https://img.shields.io/badge/Schema%20Files-LinkML%2C%20JSON%2C%20SHACL%2C%20OWL-32CD32)](https://ce-rise-models.codeberg.page/dpp-access-and-governance/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17899269.svg)](https://doi.org/10.5281/zenodo.17899269) [![Schemas](https://img.shields.io/badge/Schema%20Files-LinkML%2C%20JSON%2C%20SHACL%2C%20OWL-32CD32)](https://ce-rise-models.codeberg.page/dp-access-and-governance/)
 
-Repository for the CE-RISE DPP Access and Governance data model, part of the DPP Metadata Layer in the Digital Product Passport architecture. This model defines the operational and access-related metadata that governs how DPP records are stored, exposed, shared, and maintained across systems. It specifies access levels, security settings, data carrier characteristics, longevity policies, interoperability configurations, and system integration parameters. This metadata acts as the "operational envelope" that controls how DPP data is accessed and managed throughout its lifecycle, complementing the structural metadata (dpp-record-metadata) and custody tracking (dpp-record-custody).
+Repository for the CE-RISE DP (Digital Passport) Access and Governance data model, part of the DP Metadata Layer in the digital product passport and/or digital material passport architecture. This model defines the operational and access-related metadata that governs how DPP and DMP records are stored, exposed, shared, and maintained across systems. It specifies access levels, security settings, data carrier characteristics, longevity policies, interoperability configurations, and system integration parameters. This metadata acts as the "operational envelope" that controls how DPP and DMP data is accessed and managed throughout its lifecycle, complementing the structural metadata (dpp-record-metadata) and custody tracking (dpp-record-custody).
 
 
 ---
 
 ## Data Model Structure
-This data model provides the operational framework for DPP record management, defining how data is accessed, who can access it, where it's stored, and how long it remains available. It ensures proper governance of DPP data across different systems, access contexts, and lifecycle stages while maintaining security and compliance requirements.
+This data model provides the operational framework for DPP and DMP record management, defining how data is accessed, who can access it, where it's stored, and how long it remains available. It ensures proper governance of DPP and DMP data across different systems, access contexts, and lifecycle stages while maintaining security and compliance requirements.
 
 ### Key Design Principles
 1. **Access control granularity**: Support for multi-level access rights (public, authenticated, role-based)
@@ -21,7 +21,7 @@ This data model provides the operational framework for DPP record management, de
 ### Core Hierarchy
 
 ```
-DPPAccessAndGovernance (root)
+DPAccessAndGovernance (root)
 ├── 1. AccessControl
 │   ├── AccessLevels
 │   │   ├── PublicAccess
@@ -141,7 +141,7 @@ Define who can access what data and under what conditions:
 - **AccessAttemptLogging**: Track failed access attempts and permission checks only
 
 #### **Step 2: Data Carrier Configuration**
-Specify how and where the DPP data is stored and accessed:
+Specify how and where the DPP and DMP data is stored and accessed:
 - **CarrierType**: Physical or digital storage mechanism
 - **CarrierCapacity**: Size constraints and optimization
 - **CarrierRedundancy**: Backup and failover strategies
@@ -178,7 +178,7 @@ Every data point includes a `sql_identifier` annotation following the pattern:
 **Pattern**: `dpag_[category]_[specific_name]`
 
 **Features:**
-- **DPP Access Governance Prefix**: All identifiers start with `dpag_`
+- **DP Access Governance Prefix**: All identifiers start with `dpag_`
 - **Hierarchical Namespacing**: Category prefixes (`access_`, `carrier_`, `longevity_`, `interop_`, `system_`)
 - **Database-Friendly**: Uses underscores, avoids special characters
 - **Unique Across Model**: No duplicate identifiers
@@ -223,7 +223,7 @@ Every data point includes a `sql_identifier` annotation following the pattern:
 Release artifacts for each version (`schema.json`, `shacl.ttl`, `model.owl`)  
 are served directly from this URL:
 ```
-https://ce-rise-models.codeberg.page/dpp-access-and-governance/
+https://ce-rise-models.codeberg.page/dp-access-and-governance/
 ```
 
 
@@ -234,7 +234,7 @@ https://ce-rise-models.codeberg.page/dpp-access-and-governance/
 If you want to view the files published for version `v1.2.0`, open:
 
 ```
-https://codeberg.org/CE-RISE-models/dpp-access-and-governance/src/tag/pages-v1.2.0/generated/
+https://codeberg.org/CE-RISE-models/dp-access-and-governance/src/tag/pages-v1.2.0/generated/
 ```
 
 Files available in that directory typically include:

@@ -1,15 +1,15 @@
-id: https://ce-rise-models.codeberg.page/dpp-access-and-governance/
-name: dpp_access_and_governance
-title: CE-RISE DPP Access and Governance Data Model
+id: https://ce-rise-models.codeberg.page/dp-access-and-governance/
+name: dp_access_and_governance
+title: CE-RISE DP Access and Governance Data Model
 description: >
-    Operational and access-related metadata that governs how DPP records are stored, exposed, shared,
+    Operational and access-related metadata that governs how DPP and DMP records are stored, exposed, shared,
     and maintained across systems. Full implementation with all five stages complete.
 license: CC BY-NC 4.0
-version: 0.0.1
+version: 0.0.3
 
 prefixes:
     linkml: https://w3id.org/linkml/
-    dpag: https://ce-rise-models.codeberg.page/dpp-access-and-governance/
+    dpag: https://ce-rise-models.codeberg.page/dp-access-and-governance/
     odrl: http://www.w3.org/ns/odrl/2/
     acl: http://www.w3.org/ns/auth/acl#
     dcterms: http://purl.org/dc/terms/
@@ -32,12 +32,12 @@ imports:
 default_range: string
 
 classes:
-    DPPAccessAndGovernance:
+    DPAccessAndGovernance:
         description: >
-            Root class for operational and access-related metadata governing DPP records.
+            Root class for operational and access-related metadata governing DPP and DMP records.
             Full implementation includes all five stages: Access Control, Data Carrier, Data Longevity,
             Interoperability, and System Integration mechanisms.
-        class_uri: dpag:DPPAccessAndGovernance
+        class_uri: dpag:DPAccessAndGovernance
         attributes:
             access_control:
                 description: Access control configuration defining who can access what data under what conditions
@@ -47,7 +47,7 @@ classes:
                     sql_identifier: dpag_access_control
                     owl.filler: dpag:access_control
             data_carrier:
-                description: Configuration for how and where DPP data is stored and accessed
+                description: Configuration for how and where DPP and DMP data is stored and accessed
                 range: DataCarrier
                 slot_uri: dpag:hasDataCarrier
                 annotations:
@@ -80,7 +80,7 @@ classes:
     AccessControl:
         description: >
             Comprehensive access control configuration including access levels, security settings,
-            and consent management for DPP data
+            and consent management for DPP and DMP data
         class_uri: acl:AccessControl
         attributes:
             access_levels:
@@ -385,7 +385,7 @@ classes:
 
     DataCarrier:
         description: >
-            Configuration specifying how and where DPP data is physically or digitally stored,
+            Configuration specifying how and where DPP and DMP data is physically or digitally stored,
             including carrier types, capacity, location, redundancy, and update mechanisms
         class_uri: dcat:Distribution
         attributes:
@@ -546,7 +546,7 @@ classes:
     DataLongevity:
         description: >
             Lifecycle policies and strategies for data retention, availability commitments,
-            archival processes, and disposal policies throughout the DPP data lifecycle
+            archival processes, and disposal policies throughout the DPP and DMP data lifecycle
         class_uri: dpag:DataLongevity
         attributes:
             retention_policy:

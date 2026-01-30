@@ -2,6 +2,11 @@
 
 All notable changes to the CE-RISE DPP Access and Governance Data Model will be documented in this file.
 
+## [0.0.3] - 2026-01-30
+
+### Added
+- Support for Digital Material Passport alongside Digital Product Passport.
+
 ## [0.0.2] - 2025-12-15
 
 ### Added
